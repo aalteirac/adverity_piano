@@ -87,9 +87,9 @@ def getWorldwideKPI(worldwide):
     cols=st.columns(len(metrics))
     for index,c in enumerate(cols):
         with cols[index]:
-            dfW=worldwide[worldwide.METRIC==metrics[index]]
-            fbnb=dfW['Value'].iloc[0]
             if 'metrics[index]' not in st.session_state:
+                dfW=worldwide[worldwide.METRIC==metrics[index]]
+                fbnb=dfW['Value'].iloc[0]
                 st.session_state[metrics[index]]=fbnb
             unit="%"
             if 'Gb' in metrics[index]:
