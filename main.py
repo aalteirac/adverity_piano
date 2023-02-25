@@ -89,10 +89,12 @@ def getWorldwideKPI(worldwide):
         with cols[index]:
             dfW=worldwide[worldwide.METRIC==metrics[index]]
             fbnb=dfW['Value'].iloc[0]
+            if 'metrics[index]' not in st.session_state:
+                st.session_state[metrics[index]]=fbnb
             unit="%"
             if 'Gb' in metrics[index]:
                 unit="Gb"
-            getCard(metricsLabels[index],str(round(fbnb,2)) + unit, metricsIcons[index])
+            getCard(metricsLabels[index],str(round(st.session_state[metrics[index]],2)) + unit, metricsIcons[index])
 
 def getCountrySelectionBox(raw):
     return st.selectbox(
