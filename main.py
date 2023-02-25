@@ -7,7 +7,7 @@ import snowflake.connector as sf
 import random
 import string
 import leafmap.foliumap as leafmap
-
+import time
 
 session=None
 
@@ -83,6 +83,7 @@ def getAllViews():
 
 @st.cache_data
 def cachedKpis(worldwide):
+    time.sleep(3)
     df = pd.DataFrame(columns=['METRIC', 'LABEL', 'ICON','VALUE'])
     for index,c in enumerate(metrics):
         dfW=worldwide[worldwide.METRIC==metrics[index]]
