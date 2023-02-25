@@ -2,8 +2,8 @@ streamlit
 streamlit-option-menu
 snowflake-connector-python
 streamlit-folium==0.11.1
-pandas~=1.4.2
-Pillow~=9.0.1
+pandas
+Pillow
 streamlit-aggrid==0.3.2
 streamlit-elements
 hydralit_components==1.0.10
