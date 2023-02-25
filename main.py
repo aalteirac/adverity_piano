@@ -81,20 +81,22 @@ def getAllViews():
     df = pd.read_sql(queryAll, session)
     return df
 
+@st.cache_data
+def cachedKpis(worldwide,metric):
+    dfW=worldwide[worldwide.METRIC==metric]
+    fbnb=dfW['Value'].iloc[0]
+    return fbnb
 
 def getWorldwideKPI(worldwide):
     st.subheader("Wordlwide High Speed Broadband Metrics (Marketplace)")
     cols=st.columns(len(metrics))
     for index,c in enumerate(cols):
         with cols[index]:
-            if 'metrics[index]' not in st.session_state:
-                dfW=worldwide[worldwide.METRIC==metrics[index]]
-                fbnb=dfW['Value'].iloc[0]
-                st.session_state[metrics[index]]=fbnb
+            fbnb=cachedKpis(worldwide,metrics[index])
             unit="%"
             if 'Gb' in metrics[index]:
                 unit="Gb"
-            getCard(metricsLabels[index],str(round(st.session_state[metrics[index]],2)) + unit, metricsIcons[index])
+            getCard(metricsLabels[index],str(round(fbnb,2)) + unit, metricsIcons[index])
 
 def getCountrySelectionBox(raw):
     return st.selectbox(
