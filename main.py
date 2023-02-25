@@ -82,21 +82,25 @@ def getAllViews():
     return df
 
 @st.cache_data
-def cachedKpis(worldwide,metric):
-    dfW=worldwide[worldwide.METRIC==metric]
-    fbnb=dfW['Value'].iloc[0]
-    return fbnb
+def cachedKpis(worldwide):
+    df = pd.DataFrame(columns=['METRIC', 'LABEL', 'ICON','VALUE'])
+    for index,c in enumerate(metrics):
+        dfW=worldwide[worldwide.METRIC==metrics[index]]
+        fbnb=dfW['Value'].iloc[0]
+        list = [metrics[index], metricsLabels[index],metricsIcons[index] ,fbnb]
+        df.loc[len(df)] = list
+    return df
 
 def getWorldwideKPI(worldwide):
     st.subheader("Wordlwide High Speed Broadband Metrics (Marketplace)")
     cols=st.columns(len(metrics))
     for index,c in enumerate(cols):
-        with c:
-            fbnb=cachedKpis(worldwide,metrics[index])
-            unit="%"
-            if 'Gb' in metrics[index]:
-                unit="Gb"
-            getCard(metricsLabels[index],str(round(fbnb,2)) + unit, metricsIcons[index])
+        row=cachedKpis(worldwide).iloc[[index]]
+        unit="%"
+        if 'Gb' in row['LABEL'].iloc[0]:
+            unit="Gb"
+        with c:    
+            getCard(row['LABEL'].iloc[0],str(round(row['VALUE'].iloc[0],2)) + unit, row['ICON'].iloc[0])
 
 def getCountrySelectionBox(raw):
     return st.selectbox(
