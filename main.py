@@ -215,7 +215,7 @@ def getPage(sess):
                                             map['cnt'] *300,
                                             map['cnt'])                                          
     map['cnt'] = np.where((map['geo_country'] == 'Mexico'),
-                                            map['cnt'] *500,
+                                            map['cnt'] *900,
                                             map['cnt'])           
     st.subheader("Trailers Views Buffering Rate (Piano)")
   
