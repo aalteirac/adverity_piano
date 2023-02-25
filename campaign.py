@@ -1,8 +1,24 @@
 import streamlit as st
 import pandas as pd
+import hydralit_components as hc
+import random
+import string
+import plotly.express as px
+import plotly.graph_objects as go
 
 session=None
 
+def getCard(text,val,icon, compare=False):
+    letters = string.ascii_lowercase
+    key = ''.join(random.choice(letters) for i in range(8))
+    pgcol='green'
+    if '-' in text:
+        pgcol='red'
+    if compare==False:
+        pgcol='darkgrey'
+    style={'icon': icon,'icon_color':'darkgrey','progress_color':pgcol}
+    icoSize="10vw"
+    hc.info_card(key=key,title=str(val), title_text_size="10vw",content=str(text),content_text_size="8vw",icon_size=icoSize,theme_override=style)
 
 @st.cache_data
 def getRawCampaign():
@@ -21,7 +37,7 @@ def getGlobalKPI(dt,kpi,op='sum'):
 def getKPIByMonth(df):
     return df.groupby(['MONTH']).agg({'IMPRESSIONS':'sum',
                                       'CLICKS':'sum',
-                                      'CTR':"mean"})
+                                      'CTR':"mean"}).reset_index()
 
 def getCTRByGenderByAge(df):
     return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'})
@@ -54,19 +70,43 @@ def getVideoKPI(df):
 def getVideoCompletionDrillDown(df):
     return df.groupby(['CAMPAIGN','AD_NAME']).agg({'VIDEO_COMPLETIONS':'mean'}).sort_values(by=['VIDEO_COMPLETIONS'],ascending=False)
 
+def getChartClickCTR(df):
+    fig = go.Figure(data=[
+        go.Bar(name='IMPRESSIONS', x=df['MONTH'], y=df['IMPRESSIONS'],yaxis='y',offsetgroup=1),
+        go.Bar(name='CLICKS', x=df['MONTH'], y=df['CLICKS'],yaxis='y2',offsetgroup=2),
+        go.Line(name='CTR(%)',x=df['MONTH'], y=df['CTR'],yaxis='y3',offsetgroup=3)
+    ],layout={
+        'yaxis': {'title': 'IMPRESSIONS','showgrid':False,'showline':False},
+        'yaxis2': {'title': 'CLICKS', 'overlaying': 'y', 'side': 'right','showgrid':False,'showline':False},
+        'yaxis3': {'title': 'CTR(%)', 'overlaying': 'y', 'side': 'left','position':0.05,"anchor":"free",'showgrid':False,'showline':False}
+    })
+    # Change the bar mode
+    fig.update_layout(barmode='group',xaxis=dict(
+        domain=[0.12, 0.88]),height=430)
+    st.plotly_chart(fig, theme="streamlit",use_container_width=True)
+
 
 def getPage(sess):
     global session 
     session = sess
-    st.write(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum'))
-    st.write(getGlobalKPI( getRawCampaign(),'CLICKS','sum'))
-    st.write(getGlobalKPI( getRawCampaign(),'CTR','mean'))
-    st.write(getKPIByMonth(getRawCampaign()))
-    st.write(getCTRByGenderByAge(getRawCampaign()))
-    st.write(getCTRByDevice(getRawCampaign()))
-    st.write(getKPIByCampaignAds(getRawCampaign()))
-    st.write(getTopBottomAds(getRawCampaign()))
-    st.write(getTopBottomAds(getRawCampaign(),True))
-    st.write(getVideoFunnel(getRawCampaign()))
-    st.write(getVideoKPI(getRawCampaign()))
-    st.write(getVideoCompletionDrillDown(getRawCampaign()))
+    # st.write(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum'))
+    # st.write(getGlobalKPI( getRawCampaign(),'CLICKS','sum'))
+    # st.write(getGlobalKPI( getRawCampaign(),'CTR','mean'))
+    col1, col2,col3 = st.columns(3)
+    with col1:
+        getCard("Impressions","{:,}".format(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum')),'fa fa-print')
+    with col2:
+        getCard("Clicks","{:,}".format(getGlobalKPI( getRawCampaign(),'CLICKS','sum')),'fa fa-hand-pointer')
+    with col3:
+        getCard("CTR (%)",str(  round(getGlobalKPI( getRawCampaign(),'CTR','mean'),2)) +"%",'fa fa-money-bill')
+    # with col2:    
+        # st.write(getKPIByMonth(getRawCampaign()))
+    getChartClickCTR(getKPIByMonth(getRawCampaign()))
+    # st.write(getCTRByGenderByAge(getRawCampaign()))
+    # st.write(getCTRByDevice(getRawCampaign()))
+    # st.write(getKPIByCampaignAds(getRawCampaign()))
+    # st.write(getTopBottomAds(getRawCampaign()))
+    # st.write(getTopBottomAds(getRawCampaign(),True))
+    # st.write(getVideoFunnel(getRawCampaign()))
+    # st.write(getVideoKPI(getRawCampaign()))
+    # st.write(getVideoCompletionDrillDown(getRawCampaign()))
