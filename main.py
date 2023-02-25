@@ -91,7 +91,7 @@ def getWorldwideKPI(worldwide):
     st.subheader("Wordlwide High Speed Broadband Metrics (Marketplace)")
     cols=st.columns(len(metrics))
     for index,c in enumerate(cols):
-        with cols[index]:
+        with c:
             fbnb=cachedKpis(worldwide,metrics[index])
             unit="%"
             if 'Gb' in metrics[index]:
