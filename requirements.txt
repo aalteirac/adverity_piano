@@ -1,4 +1,5 @@
 streamlit==1.19.0
+plotly
 streamlit-option-menu
 snowflake-connector-python
 streamlit-folium==0.11.1
