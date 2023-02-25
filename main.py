@@ -101,7 +101,7 @@ def getWorldwideKPI(worldwide):
         if 'Gb' in row['LABEL'].iloc[0]:
             unit="Gb"
         with c:
-            time.sleep(0.2)    
+            time.sleep(0.05)    
             getCard(row['LABEL'].iloc[0],str(round(row['VALUE'].iloc[0],2)) + unit, row['ICON'].iloc[0])
 
 def getCountrySelectionBox(raw):
