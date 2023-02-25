@@ -91,7 +91,6 @@ def cachedKpis(worldwide):
         df.loc[len(df)] = list
     return df
 
-
 def getWorldwideKPI(worldwide):
     st.subheader("Wordlwide High Speed Broadband Metrics (Marketplace)")
     cols=st.columns(len(metrics))
@@ -184,7 +183,7 @@ def getMap2(map):
 
 def getMap(map):
     agg=map.groupby(['geo_country']).mean().reset_index()
-    m = leafmap.Map(center=[15, -30], zoom=3, tiles="stamentonerbackground")
+    m = leafmap.Map(center=[15, -40], zoom=3, tiles="stamentonerbackground")
     m.add_heatmap(
         data=agg,
         latitude="lat",

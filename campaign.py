@@ -40,7 +40,7 @@ def getKPIByMonth(df):
                                       'CTR':"mean"}).reset_index()
 
 def getCTRByGenderByAge(df):
-    return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'})
+    return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'}).reset_index()
 
 def getKPIByCampaignAds(df):
     return df.groupby(['CAMPAIGN','AD_NAME']).agg({'IMPRESSIONS':'sum',
@@ -48,7 +48,7 @@ def getKPIByCampaignAds(df):
                                       'CTR':"mean"})
 
 def getCTRByDevice(df):
-    return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'})
+    return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'}).reset_index()
 
 def getTopBottomAds(df,bottom=False,n=3):
     return df.groupby(['AD_NAME']).agg({'ER':'mean'}).sort_values(by=['ER'],ascending=bottom).head(n)
@@ -82,9 +82,77 @@ def getChartClickCTR(df):
     })
     # Change the bar mode
     fig.update_layout(barmode='group',xaxis=dict(
-        domain=[0.12, 0.88]),height=430)
+        domain=[0.12, 0.88]),height=430, title='Impressions, Clicks & CTR(%)')
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
+def getChartCTRByDevice(df):
+    fig = go.Figure(data=[
+        go.Bar(name='IMPRESSIONS', x=df['DEVICE_TYPE'], y=df['CTR'],yaxis='y',text=df['CTR']/100)
+    ],layout={
+        'yaxis': {'title': 'CTR(%)','showgrid':False,'showline':False}
+    })
+    fig.data[0].marker.color = ('blue','green','darkgrey')
+    fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
+    fig.update_layout(height=430,yaxis_range=[1.2,1.25],title='CTR(%) by Device Type')
+    st.plotly_chart(fig, theme="streamlit",use_container_width=True)
+
+def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
+    colorPalette = ['red','#646464','#306998','#FFE873','#FFD43B']
+    labelList = []
+    colorNumList = []
+    for catCol in cat_cols:
+        labelListTemp =  list(set(df[catCol].values))
+        colorNumList.append(len(labelListTemp))
+        labelList = labelList + labelListTemp
+        
+    labelList = list(dict.fromkeys(labelList))
+    
+    colorList = []
+    for idx, colorNum in enumerate(colorNumList):
+        colorList = colorList + [colorPalette[idx]]*colorNum
+        
+    for i in range(len(cat_cols)-1):
+        if i==0:
+            sourceTargetDf = df[[cat_cols[i],cat_cols[i+1],value_cols]]
+            sourceTargetDf.columns = ['source','target','count']
+        else:
+            tempDf = df[[cat_cols[i],cat_cols[i+1],value_cols]]
+            tempDf.columns = ['source','target','count']
+            sourceTargetDf = pd.concat([sourceTargetDf,tempDf])
+        sourceTargetDf = sourceTargetDf.groupby(['source','target']).agg({'count':'sum'}).reset_index()
+        
+    sourceTargetDf['sourceID'] = sourceTargetDf['source'].apply(lambda x: labelList.index(x))
+    sourceTargetDf['targetID'] = sourceTargetDf['target'].apply(lambda x: labelList.index(x))
+    #OVERRIDE COLOR AS I DON'T HAVE TIME :-)
+    colorList=['darkgrey','#7ce670','blue','#ebf0a8','#e3ed58','#cad622','#acd622','#7cd622','#22d69d']
+    data = dict(
+        type='sankey',
+        node = dict(
+          pad = 15,
+          thickness = 20,
+          line = dict(
+            color = "black",
+            width = 0.5
+          ),
+          label = labelList,
+          color = colorList
+        ),
+        link = dict(
+          source = sourceTargetDf['sourceID'],
+          target = sourceTargetDf['targetID'],
+          value = sourceTargetDf['count'],
+        )
+      )
+    
+    layout =  dict(
+        title = title,
+        font = dict(
+          size = 10
+        )
+    )
+       
+    fig = dict(data=[data], layout=layout)
+    st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
 def getPage(sess):
     global session 
@@ -99,11 +167,14 @@ def getPage(sess):
         getCard("Clicks","{:,}".format(getGlobalKPI( getRawCampaign(),'CLICKS','sum')),'fa fa-hand-pointer')
     with col3:
         getCard("CTR (%)",str(  round(getGlobalKPI( getRawCampaign(),'CTR','mean'),2)) +"%",'fa fa-money-bill')
-    # with col2:    
-        # st.write(getKPIByMonth(getRawCampaign()))
     getChartClickCTR(getKPIByMonth(getRawCampaign()))
-    # st.write(getCTRByGenderByAge(getRawCampaign()))
+   
     # st.write(getCTRByDevice(getRawCampaign()))
+    colL,colR=st.columns(2)
+    with colR:
+        genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
+    with colL:
+        getChartCTRByDevice(getCTRByDevice(getRawCampaign()))
     # st.write(getKPIByCampaignAds(getRawCampaign()))
     # st.write(getTopBottomAds(getRawCampaign()))
     # st.write(getTopBottomAds(getRawCampaign(),True))
