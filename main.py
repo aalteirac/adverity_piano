@@ -111,7 +111,7 @@ def getCountryKPI(country,raw,worldwide):
         merged["evol"]=round(((merged['Value_y']- merged['Value_x'] )/ merged['Value_x'])*100,0)
         cols=st.columns(len(metrics))
         for index,c in enumerate(cols):
-            with cols[index]:
+            with c:
                 try:
                     dfOne=merged[merged.METRIC==metrics[index]]
                     fbnb=dfOne['Value_y'].iloc[0]
