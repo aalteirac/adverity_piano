@@ -1,5 +1,5 @@
 from streamlit_option_menu import option_menu
-import main,campaign, campaign2,campaign3
+import main,campaign, campaign2,campaign3, campaign4
 from ui import setUI
 import streamlit.components.v1 as components
 import snowflake.connector as sf
@@ -8,7 +8,7 @@ import hydralit_components as hc
 import time
 
 
-@st.cache_resource(ttl=500)
+@st.cache_resource(ttl=2500)
 def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
@@ -64,8 +64,8 @@ hvar = """  <script>
             </script> """
 
 
-page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive"],
-                   icons=['house', 'binoculars-fill', "list-task",'camera-reels'],
+page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive","Country Performance"],
+                   icons=['house', 'binoculars-fill', "list-task",'camera-reels','map'],
                    menu_icon="window", default_index=0, orientation="horizontal",
                    styles={
                        "container": {"max-width": "100%!important","--primary-color":"#4a4d4f","--text-color":"#30333f"},
@@ -84,7 +84,9 @@ if page == 'Campaigns Overview':
 if page == 'Ads Performance':
     campaign2.getPage(getSession()) 
 if page == 'Video Deep Dive':
-    campaign3.getPage(getSession())        
+    campaign3.getPage(getSession())      
+if page == 'Country Performance':
+    campaign4.getPage(getSession())        
 
 # menu_data = [
 #     {'id':'Home','icon':"🐙",'label':"Home"},
