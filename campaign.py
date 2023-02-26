@@ -295,7 +295,7 @@ def getGeoFromIso(df):
 
 def getMapConversion(df,metric):
     df=df[['geometry','longitude','latitude',metric]]
-    m = leafmap.Map(center=(40, -100),zoom=3,draw_control=False,
+    m = leafmap.Map(center=(40, -100),zoom=5,draw_control=False,
         measure_control=False,
         fullscreen_control=False,
         attribution_control=True
@@ -304,7 +304,7 @@ def getMapConversion(df,metric):
         df, column=metric, scheme='Quantiles', cmap='Blues', legend_title=metric
     )
     time.sleep(1)
-    m.zoom_to_bounds([-9.0882278, -55.3228175, 168.2249543, 72.2460938])
+    m.zoom_to_bounds([-9.0882278, -55.3228175, 68.2249543, 72.2460938])
     # m = leafmap.Map(center=[15, -40], zoom=3 ,tiles="stamentonerbackground")
     # df=df[['longitude','latitude',metric]]
     # df[metric]=round(df[metric],2)
@@ -326,7 +326,7 @@ def getMapConversion(df,metric):
     #     radius=33,
     #     blur=22
     # )
-    m.to_streamlit(height=650)
+    m.to_streamlit(height=350)
     # world_map= folium.Map(tiles="cartodbpositron")
     # marker_cluster = MarkerCluster().add_to(world_map)
     # #for each coordinate, create circlemarker of user percent
