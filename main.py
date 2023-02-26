@@ -202,7 +202,7 @@ def getPage(sess):
     raw['DATE'] = pd.to_datetime(raw['DATE'], format='%Y-%m-%d')
     worldwide=raw.groupby(['METRIC', 'DATE']).mean().reset_index()
     getWorldwideKPI(worldwide)
-    
+
     raw['Country Name']=raw['Country Name'].replace(['Colombia'], 'Argentina')
     raw.sort_values(by=['Country Name'], inplace=True)
     country=getCountrySelectionBox(raw)
