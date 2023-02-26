@@ -165,23 +165,29 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     fig = dict(data=[data], layout=layout)
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
+def getPercentRenderer():
+    rd = JsCode('''
+        function(params) {return '<span>' + parseFloat(params.value).toFixed(3) + '%</span>'}
+    ''') 
+    return rd   
+
 def getTableCampaignPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
     ob.configure_column('IMPRESSIONS', aggFunc='sum',header_name='IMPRESSIONS')
     ob.configure_column('CLICKS', aggFunc='sum', header_name='CLICKS')
-    ob.configure_column('CTR', aggFunc='avg',header_name='CTR')
+    ob.configure_column('CTR', aggFunc='avg',header_name='CTR',cellRenderer= getPercentRenderer())
     ob.configure_grid_options(autoGroupColumnDef={'headerName':'CAMPAIGN/AD_TYPE'},suppressAggFuncInHeader = True)
     custom_css = {
         ".ag-root-wrapper":{
-             "margin-top":"30px",
+             "margin-top":"28px",
              "border-bottom": "2px",
              "border-bottom-color": "#b9b5b5",
              "border-bottom-style": "double"
              }
         }
-    AgGrid(df, ob.build(), enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=345,custom_css=custom_css)
+    AgGrid(df, ob.build(), enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 
 def getPage(sess):
     global session 
