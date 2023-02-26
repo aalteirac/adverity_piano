@@ -186,7 +186,7 @@ def getMap2(map):
 
 def getMap(map):
     agg=map.groupby(['geo_country']).mean().reset_index()
-    m = leafmap.Map(center=[15, -40], zoom=3, tiles="stamentonerbackground")
+    m = leafmap.Map(center=[15, -40], zoom=2, tiles="stamentonerbackground")
     m.add_heatmap(
         data=agg,
         latitude="lat",
@@ -196,7 +196,7 @@ def getMap(map):
         radius=33,
         blur=22
     )
-    m.to_streamlit(height=650,)
+    m.to_streamlit(height=430,)
 
 def getPage(sess):
     global session
@@ -205,6 +205,7 @@ def getPage(sess):
     raw['DATE'] = pd.to_datetime(raw['DATE'], format='%Y-%m-%d')
     worldwide=raw.groupby(['METRIC', 'DATE']).mean().reset_index()
     getWorldwideKPI(worldwide)
+
 
     raw['Country Name']=raw['Country Name'].replace(['Colombia'], 'Argentina')
     raw.sort_values(by=['Country Name'], inplace=True)
@@ -221,7 +222,7 @@ def getPage(sess):
                                             map['cnt'] *900,
                                             map['cnt'])           
     st.subheader("Trailers Views Buffering Rate (Piano)")
-  
+
     col0,col1=st.columns(2)
     with col1:
         campaign=getCampaignSelectionBox(map)
