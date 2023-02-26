@@ -167,7 +167,7 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
 
 def getPercentRenderer():
     rd = JsCode('''
-        function(params) {return '<span>' + parseFloat(params.value).toFixed(3) + '%</span>'}
+        function(params) {return '<span>' + parseFloat(params.value).toFixed(2) + '%</span>'}
     ''') 
     return rd   
 
@@ -180,6 +180,9 @@ def getTableCampaignPerf(df):
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR',cellRenderer= getPercentRenderer())
     ob.configure_grid_options(autoGroupColumnDef={'headerName':'CAMPAIGN/AD_TYPE'},suppressAggFuncInHeader = True)
     custom_css = {
+        ".ag-watermark":{
+            "display":"none!important"
+        },
         ".ag-root-wrapper":{
              "margin-top":"28px",
              "border-bottom": "2px",
