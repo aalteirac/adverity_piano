@@ -77,6 +77,8 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                    }
                    )
 # components.html(hvar, height=0, width=0)
+emp=st.empty()
+emp.title('Loading...')
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
@@ -87,7 +89,7 @@ if page == 'Video Deep Dive':
     campaign3.getPage(getSession())      
 if page == 'Country Performance':
     campaign4.getPage(getSession())        
-
+emp.empty()
 # menu_data = [
 #     {'id':'Home','icon':"🐙",'label':"Home"},
 #     {'id':'Campaigns','icon': "💀", 'label':"Campaigns"},
