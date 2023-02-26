@@ -71,7 +71,7 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                        "container": {"max-width": "100%!important","--primary-color":"#4a4d4f","--text-color":"#30333f"},
                        "nav-link": {"font-weight": "600"},
                        "menu-title" :{"font-weight": "600"},
-                       "nav-link": {"font-size": "1.14vw"}
+                       "nav-link": {"font-size": "1.14vw","font-weight": "600"}
                        # "margin":"0px", "--hover-color": "#eee"}
                        # "container": {"padding": "0!important", "background-color": "#fafafa"}, "icon": {"color":
                        # "orange", "font-size": "25px"}, "nav-link": {"font-size": "25px", "text-align": "left",
@@ -85,7 +85,7 @@ emp=st.empty()
 st.markdown("""
 <style>
 .big-font {
-    font-size:40vw !important;
+    font-size:34vw !important;
     color:"darkgrey";
     opacity:0.1;
     text-align:center;
