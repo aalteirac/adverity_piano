@@ -85,10 +85,12 @@ st.markdown("""
 .big-font {
     font-size:30vw !important;
     color:"darkgrey";
+    opacity:0.2;
+    text-align:center;
 }
 </style>
 """, unsafe_allow_html=True)
-emp.markdown('<p class="big-font">LOAD...</p>', unsafe_allow_html=True)
+emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
