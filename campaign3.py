@@ -181,7 +181,68 @@ def getVideoForMap(df):
     df=getGeoFromIso(df)
     return df
 
+def getKPIByCountry(df):
+    df=df.groupby(['COUNTRY_NAME','CAMPAIGN','AD_TYPE','AD_NAME']).agg({
+                                      'CTR':"mean",
+                                      'VIDEO_COMPLETIONS':'sum',
+                                      'VIDEO_COMPLETION_RATE':'mean'
+                                      }).reset_index()
+    df['VIDEO_COMPLETION_RATE']=df['VIDEO_COMPLETION_RATE']*100
+    return df
 
+def getPercentRenderer():
+    rd = JsCode('''
+        function(params) {
+            var color='green';
+            if(params.value<1)
+                color="red";
+            if(params.value>1 && params.value<1.1)
+                color="#ffc700";    
+            return '<span style="color:'+color + '">' + parseFloat(params.value).toFixed(2) + '%</span>'}
+    ''') 
+    return rd
+  
+def getPercentRendererComp():
+    rd = JsCode('''
+        function(params) {
+            var color='green';
+            if(params.value<25)
+                color="red";
+            if(params.value>25 && params.value<30)
+                color="#ffc700";    
+            return '<span style="color:'+color + '">' + parseFloat(params.value).toFixed(2) + '%</span>'}
+    ''') 
+    return rd   
+
+def getTableCountryPerf(df):
+    ob = GridOptionsBuilder.from_dataframe(df)
+    ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
+    ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
+    ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
+    ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentRenderer())
+    ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')
+    ob.configure_column('VIDEO_COMPLETION_RATE', aggFunc='avg',header_name='VIDEO COMPLETION RATE(%)',cellRenderer= getPercentRendererComp())
+    
+    ob.configure_grid_options(suppressAggFuncInHeader = True)
+    custom_css = {
+        ".ag-watermark":{
+            "display":"none!important"
+        },
+        ".ag-root-wrapper":{
+             "margin-top":"28px",
+             "border-bottom": "2px",
+             "border-bottom-color": "#b9b5b5",
+             "border-bottom-style": "double"
+             }
+        }
+    gripOption=ob.build()
+    gripOption["autoGroupColumnDef"]= {
+    "headerName": 'COUNTRY/CAMPAIGN/AD_TYPE',
+    "cellRendererParams": {
+      "suppressCount": True,
+        },
+    }
+    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 def getPage(sess):
     global session 
     session = sess
@@ -197,4 +258,5 @@ def getPage(sess):
         getMapConversion(getVideoForMap(getRawCampaign()),'CONVERSIONS') 
     with colMap2:
         getMapConversion(getVideoForMap(getRawCampaign()),'VIDEO_COMPLETION_RATE')     
-        # getMapConversion(getVideoForMap(getRawCampaign()),'CONVERSIONS')   
+    getTableCountryPerf(getKPIByCountry(getRawCampaign()))
+    # st.write(getKPIByCountry(getRawCampaign()))
