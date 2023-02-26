@@ -77,8 +77,18 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                    }
                    )
 # components.html(hvar, height=0, width=0)
+
+
 emp=st.empty()
-emp.title('Loading...')
+st.markdown("""
+<style>
+.big-font {
+    font-size:30vw !important;
+    color:"darkgrey";
+}
+</style>
+""", unsafe_allow_html=True)
+emp.markdown('<p class="big-font">LOAD...</p>', unsafe_allow_html=True)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
