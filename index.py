@@ -73,7 +73,7 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns"],
                        # "margin":"0px", "--hover-color": "#eee"}, "nav-link-selected": {"background-color": "green"},
                    }
                    )
-components.html(hvar, height=0, width=0)
+# components.html(hvar, height=0, width=0)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns':
