@@ -47,7 +47,10 @@ def getCard(text,val,icon, compare=False):
         pgcol='darkgrey'
     style={'icon': icon,'icon_color':'darkgrey','progress_color':pgcol}
     icoSize="20vw"
-    hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style,bar_value=100)
+    if compare==False:
+        hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style)
+    else:
+        hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style,bar_value=100)    
 
 @st.cache_data
 def getBroadband():
@@ -65,7 +68,7 @@ def getViewsByCity():
     select count(distinct av_session_id) as cnt, adverity.adverity.campaign() as CAMPAIGN, geo_country, geo_city,geo_latitude as lat,geo_longitude as lon    
     FROM ATIDEMO.stream.events
     Where av_session_id is not null and av_show is not null and
-        to_date(EVENT_TIME) BETWEEN '2022-10-02' AND to_date(CURRENT_DATE())
+        to_date(EVENT_TIME) BETWEEN '2022-10-02' AND '2023-02-25'
     group by geo_country, geo_city,geo_latitude,geo_longitude
     '''
     df = pd.read_sql(queryAll, session)

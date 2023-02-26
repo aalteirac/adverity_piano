@@ -17,8 +17,8 @@ def getCard(text,val,icon, compare=False):
     if compare==False:
         pgcol='darkgrey'
     style={'icon': icon,'icon_color':'darkgrey','progress_color':pgcol}
-    icoSize="10vw"
-    hc.info_card(key=key,title=str(val), title_text_size="10vw",content=str(text),content_text_size="8vw",icon_size=icoSize,theme_override=style)
+    icoSize="15vw"
+    hc.info_card(key=key,title=str(val), title_text_size="12vw",content=str(text),content_text_size="8vw",icon_size=icoSize,theme_override=style)
 
 @st.cache_data
 def getRawCampaign():
@@ -104,7 +104,7 @@ def getChartTopAds(df,asc=True,prefix='Top'):
     fig.update_xaxes(visible=False, showticklabels=False)
     fig.data[0].marker.color = ('blue','green','darkgrey')
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
-    fig.update_layout(height=430,title=prefix+' Performing Ads by ER(%)') #yaxis_range=[1.2,1.25]
+    fig.update_layout(height=430,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)    
 
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
@@ -202,13 +202,15 @@ def getPage(sess):
     # st.write(getTopBottomAds(getRawCampaign()))
     # st.write(getTopBottomAds(getRawCampaign(),True))
     # st.write(getKPIByCampaignAds(getRawCampaign()))
-    col1, col2,col3 = st.columns(3)
+    col1, col2,col3,col4 = st.columns(4)
     with col1:
-        getCard("Impressions","{:,}".format(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum')),'fa fa-print')
+        getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum')),'fa fa-print')
     with col2:
-        getCard("Clicks","{:,}".format(getGlobalKPI( getRawCampaign(),'CLICKS','sum')),'fa fa-hand-pointer')
+        getCard("CLICKS","{:,}".format(getGlobalKPI( getRawCampaign(),'CLICKS','sum')),'fa fa-hand-pointer')
     with col3:
         getCard("CTR (%)",str(  round(getGlobalKPI( getRawCampaign(),'CTR','mean'),2)) +"%",'fa fa-money-bill')
+    with col4:
+        getCard("ER (%)",str(  round(getGlobalKPI( getRawCampaign(),'ER','mean'),2)) +"%",'fa fa-heart')
     getChartClickCTR(getKPIByMonth(getRawCampaign()))
    
     

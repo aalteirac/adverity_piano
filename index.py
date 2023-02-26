@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import snowflake.connector as sf
 import streamlit as st
 
-@st.cache_resource()
+@st.cache_resource(ttl=1000)
 def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
