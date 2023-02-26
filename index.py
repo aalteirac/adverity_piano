@@ -83,7 +83,7 @@ emp=st.empty()
 st.markdown("""
 <style>
 .big-font {
-    font-size:30vw !important;
+    font-size:40vw !important;
     color:"darkgrey";
     opacity:0.2;
     text-align:center;

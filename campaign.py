@@ -66,7 +66,7 @@ def getChartClickCTR(df):
     })
     # Change the bar mode
     fig.update_layout(barmode='group',xaxis=dict(
-        domain=[0.12, 0.88]),height=610, title='Impressions, Clicks & CTR(%)')
+        domain=[0.12, 0.88]),height=600, title='Impressions, Clicks & CTR(%)')
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
 def getKPIByMonth(df):

@@ -61,7 +61,7 @@ def getChartTopAds(df,asc=True,prefix='Top'):
     fig.update_xaxes(visible=False, showticklabels=False)
     fig.data[0].marker.color = ('blue','green','darkgrey')
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
-    fig.update_layout(height=350,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
+    fig.update_layout(height=340,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)    
 
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
