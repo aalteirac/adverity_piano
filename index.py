@@ -70,7 +70,9 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                    styles={
                        "container": {"max-width": "100%!important","--primary-color":"#4a4d4f","--text-color":"#30333f"},
                        "nav-link": {"font-weight": "600"},
-                       "menu-title" :{"font-weight": "600"}
+                       "menu-title" :{"font-weight": "600"},
+                       "nav-link": {"font-size": "1.14vw"}
+                       # "margin":"0px", "--hover-color": "#eee"}
                        # "container": {"padding": "0!important", "background-color": "#fafafa"}, "icon": {"color":
                        # "orange", "font-size": "25px"}, "nav-link": {"font-size": "25px", "text-align": "left",
                        # "margin":"0px", "--hover-color": "#eee"}, "nav-link-selected": {"background-color": "green"},
