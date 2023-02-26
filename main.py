@@ -186,7 +186,7 @@ def getMap2(map):
 
 def getMap(map):
     agg=map.groupby(['geo_country']).mean().reset_index()
-    m = leafmap.Map(center=[15, -40], zoom=2, tiles="stamentonerbackground")
+    m = leafmap.Map(center=[15, -40], zoom=2,)
     m.add_heatmap(
         data=agg,
         latitude="lat",
