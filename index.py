@@ -85,7 +85,7 @@ st.markdown("""
 .big-font {
     font-size:40vw !important;
     color:"darkgrey";
-    opacity:0.2;
+    opacity:0.1;
     text-align:center;
 }
 </style>
