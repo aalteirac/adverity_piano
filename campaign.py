@@ -3,8 +3,8 @@ import pandas as pd
 import hydralit_components as hc
 import random
 import string
-import plotly.express as px
 import plotly.graph_objects as go
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
 
 session=None
 
@@ -43,15 +43,15 @@ def getCTRByGenderByAge(df):
     return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'}).reset_index()
 
 def getKPIByCampaignAds(df):
-    return df.groupby(['CAMPAIGN','AD_NAME']).agg({'IMPRESSIONS':'sum',
+    return df.groupby(['CAMPAIGN','AD_TYPE','AD_NAME']).agg({'IMPRESSIONS':'sum',
                                       'CLICKS':'sum',
-                                      'CTR':"mean"})
+                                      'CTR':"mean"}).reset_index()
 
 def getCTRByDevice(df):
     return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'}).reset_index()
 
 def getTopBottomAds(df,bottom=False,n=3):
-    return df.groupby(['AD_NAME']).agg({'ER':'mean'}).sort_values(by=['ER'],ascending=bottom).head(n)
+    return df.groupby(['AD_NAME']).agg({'ER':'mean'}).sort_values(by=['ER'],ascending=bottom).reset_index().head(n)
 
 def getVideoFunnel(df):
     col_list= ['VIEWS','VIDEO_QUARTILE_25_VIEWS','VIDEO_QUARTILE_50_VIEWS','VIDEO_QUARTILE_75_VIEWS','VIDEO_COMPLETIONS']
@@ -93,8 +93,19 @@ def getChartCTRByDevice(df):
     })
     fig.data[0].marker.color = ('blue','green','darkgrey')
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
-    fig.update_layout(height=430,yaxis_range=[1.2,1.25],title='CTR(%) by Device Type')
+    fig.update_layout(height=430,title='CTR(%) by Device Type',yaxis_range=[df['CTR'].min() - (df['CTR'].min()/50),df['CTR'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
+
+def getChartTopAds(df,asc=True,prefix='Top'):
+    df=df.sort_values(['ER'], ascending=[asc])
+    fig = go.Figure(data=[
+        go.Bar(name='IMPRESSIONS', y=df['AD_NAME'], x=df['ER'],text=df['ER']/100, orientation='h')
+    ])
+    fig.update_xaxes(visible=False, showticklabels=False)
+    fig.data[0].marker.color = ('blue','green','darkgrey')
+    fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
+    fig.update_layout(height=430,title=prefix+' Performing Ads by ER(%)') #yaxis_range=[1.2,1.25]
+    st.plotly_chart(fig, theme="streamlit",use_container_width=True)    
 
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     colorPalette = ['red','#646464','#306998','#FFE873','#FFD43B']
@@ -154,12 +165,34 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     fig = dict(data=[data], layout=layout)
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
+def getTableCampaignPerf(df):
+    ob = GridOptionsBuilder.from_dataframe(df)
+    ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
+    ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
+    ob.configure_column('IMPRESSIONS', aggFunc='sum',header_name='IMPRESSIONS')
+    ob.configure_column('CLICKS', aggFunc='sum', header_name='CLICKS')
+    ob.configure_column('CTR', aggFunc='avg',header_name='CTR')
+    ob.configure_grid_options(autoGroupColumnDef={'headerName':'CAMPAIGN/AD_TYPE'},suppressAggFuncInHeader = True)
+    custom_css = {
+        ".ag-root-wrapper":{
+             "margin-top":"30px",
+             "border-bottom": "2px",
+             "border-bottom-color": "#b9b5b5",
+             "border-bottom-style": "double"
+             }
+        }
+    AgGrid(df, ob.build(), enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=345,custom_css=custom_css)
+
 def getPage(sess):
     global session 
     session = sess
     # st.write(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum'))
     # st.write(getGlobalKPI( getRawCampaign(),'CLICKS','sum'))
     # st.write(getGlobalKPI( getRawCampaign(),'CTR','mean'))
+    # st.write(getCTRByDevice(getRawCampaign()))
+    # st.write(getTopBottomAds(getRawCampaign()))
+    # st.write(getTopBottomAds(getRawCampaign(),True))
+    # st.write(getKPIByCampaignAds(getRawCampaign()))
     col1, col2,col3 = st.columns(3)
     with col1:
         getCard("Impressions","{:,}".format(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum')),'fa fa-print')
@@ -169,15 +202,22 @@ def getPage(sess):
         getCard("CTR (%)",str(  round(getGlobalKPI( getRawCampaign(),'CTR','mean'),2)) +"%",'fa fa-money-bill')
     getChartClickCTR(getKPIByMonth(getRawCampaign()))
    
-    # st.write(getCTRByDevice(getRawCampaign()))
+    
     colL,colR=st.columns(2)
     with colR:
         genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
     with colL:
         getChartCTRByDevice(getCTRByDevice(getRawCampaign()))
-    # st.write(getKPIByCampaignAds(getRawCampaign()))
-    # st.write(getTopBottomAds(getRawCampaign()))
-    # st.write(getTopBottomAds(getRawCampaign(),True))
+    
+    colAd1,colAd2,colTable=st.columns([1,1,3])   
+    with colAd1: 
+        getChartTopAds(getTopBottomAds(getRawCampaign()))    
+    with colAd2: 
+        getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')    
+    with colTable:
+        getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))       
+
+    
     # st.write(getVideoFunnel(getRawCampaign()))
     # st.write(getVideoKPI(getRawCampaign()))
     # st.write(getVideoCompletionDrillDown(getRawCampaign()))
