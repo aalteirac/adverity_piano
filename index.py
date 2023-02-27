@@ -98,8 +98,8 @@ emp=st.empty()
 # }
 # </style>
 # """, unsafe_allow_html=True)
-emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
 setUI()
+emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
 # components.html(hvar, height=0, width=0)
 if page == 'Home':
     main.getPage(getSession())
