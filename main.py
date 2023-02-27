@@ -45,7 +45,7 @@ def getCard(text,val,icon, compare=False):
         pgcol='red'
     if compare==False:
         pgcol='darkgrey'
-    style={'icon': icon,'icon_color':'darkgrey','progress_color':pgcol}
+    style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
     icoSize="20vw"
     if compare==False:
         hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style)

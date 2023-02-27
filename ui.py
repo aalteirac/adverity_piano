@@ -27,11 +27,11 @@ def setUI():
             }
             window.parent.document.addEventListener("DOMNodeInserted", 
                 debounce((e) => {
-                    //if (e.target && e.target.classList && e.target.classList.contains("element-container")  ){
+                    //if (e.target && e.target.classList && (e.target.classList.contains("element-container") || e.target.classList.contains("stHorizontalBlock") ) ){
                         hide();
+                        //console.log('TEST')
                     //}    
                     setTimeout(()=>{
-                            console.log('check ifr')
                             window.parent.document.querySelector(".main").style.overflow="auto";
                             window.parent.document.querySelector(".main").scrollTop = 0;
                             setTimeout(()=>{
@@ -43,7 +43,7 @@ def setUI():
                             },1000)
                         }
                     ,1000)
-                },500,true)
+                },1000,true)
                 , true);   
 
             var my_style= window.parent.document.createElement('style');
@@ -64,7 +64,7 @@ def setUI():
                     max-width: unset;
                     padding-left: 5em;
                     padding-right: 5em;
-                    padding-top: 1em;
+                    padding-top: 0em;
                     padding-bottom: 1em;
                     }
                 [data-testid="stMetricDelta"] > div:nth-child(2){

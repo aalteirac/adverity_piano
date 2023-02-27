@@ -57,7 +57,7 @@ def getChartCTRByDevice(df):
             t=30,
             pad=4
         ))
-    fig.update_layout(height=430,title='CTR(%) by Device Type',yaxis_range=[df['CTR'].min() - (df['CTR'].min()/50),df['CTR'].max()]) #yaxis_range=[1.2,1.25]
+    fig.update_layout(height=490,title='CTR(%) by Device Type',yaxis_range=[df['CTR'].min() - (df['CTR'].min()/50),df['CTR'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
 def getChartTopAds(df,asc=True,prefix='Top'):
@@ -123,6 +123,7 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
       )
     
     layout =  dict(
+        height= 470,
         title = title,
         font = dict(
           size = 10
@@ -173,6 +174,7 @@ def getTableCampaignPerf(df):
 def getPage(sess):
     global session 
     session = sess
+    # st.subheader("Ads Performance Deep Dive")
     colL,colR=st.columns(2)
     with colR:
         genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
