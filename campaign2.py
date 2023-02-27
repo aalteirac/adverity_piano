@@ -50,6 +50,13 @@ def getChartCTRByDevice(df):
     })
     fig.data[0].marker.color = ('blue','green','darkgrey')
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
+    fig.update_layout(margin=dict(
+            l=0,
+            r=0,
+            b=0,
+            t=30,
+            pad=4
+        ))
     fig.update_layout(height=430,title='CTR(%) by Device Type',yaxis_range=[df['CTR'].min() - (df['CTR'].min()/50),df['CTR'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
@@ -62,7 +69,10 @@ def getChartTopAds(df,asc=True,prefix='Top'):
     fig.data[0].marker.color = ('blue','green','darkgrey')
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
     fig.update_layout(height=340,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
-    st.plotly_chart(fig, theme="streamlit",use_container_width=True)    
+    config = {
+        "displayModeBar": False
+    }
+    st.plotly_chart(fig,config=config, theme="streamlit",use_container_width=True)    
 
 def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     colorPalette = ['red','#646464','#306998','#FFE873','#FFD43B']
@@ -116,6 +126,13 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
         title = title,
         font = dict(
           size = 10
+        ),
+        margin=dict(
+            l=0,
+            r=0,
+            b=0,
+            t=30,
+            pad=4
         )
     )
        
