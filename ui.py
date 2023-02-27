@@ -7,6 +7,12 @@ def setUI():
 .stApp header{
     display:none;
 }
+.big-font {
+    font-size:34vw !important;
+    color:"darkgrey";
+    opacity:0.1;
+    text-align:center;
+}
 .streamlit-expanderHeader p{
 	font-size: x-large;
 }

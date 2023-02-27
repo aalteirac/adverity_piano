@@ -12,8 +12,6 @@ import time
 def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
-
-setUI()
 hvar = """  <script>
                 function debounce(func, wait, immediate) {
                     var timeout;
@@ -33,13 +31,17 @@ hvar = """  <script>
                 }
 
                 function fade(e){
-                    e.style.transition = "opacity 0s";
-                    e.style.opacity="0.01";
+                    //e.style.transition = "opacity 0s";
+                    //e.style.opacity="0.01";
+                    //window.parent.document.querySelector(".main").style.overflow="hidden";
+                    //window.parent.document.querySelector(".main").scrollTop = 0;
                     //window.parent.document.body.style.transition = "opacity 0s";
                     //window.parent.document.body.style.opacity="0.01";
                     setTimeout(()=>{
-                        e.style.transition = "opacity 0.4s";
-                        e.style.opacity="1";
+                        window.parent.document.querySelector(".main").style.overflow="auto";
+                        window.parent.document.querySelector(".main").scrollTop = 0;
+                        //e.style.transition = "opacity 0.4s";
+                        //e.style.opacity="1";
                         //window.parent.document.body.style.position="static";
                         //window.parent.document.body.style.left="0px";
                         load=false;
@@ -47,6 +49,12 @@ hvar = """  <script>
                 }
                 var load;
                  window.parent.document.addEventListener("DOMNodeInserted", function (e) {
+                                window.parent.document.querySelector(".main").scrollTop = 0;
+                                window.parent.document.querySelector(".main").style.overflow="hidden";
+                                if(e.target && e.target.classList && (e.target.classList.contains("stMarkdown")) ){
+                                    //e.target.parent.style.display="none";
+                                    //console.log("MARKUP")
+                                }
                                 if (e.target && e.target.classList && (e.target.classList.contains("element-container") || e.target.classList.contains("stHorizontalBlock")))
                                     fade(e.target)
                                 //debounce(fade,1000,true)
@@ -78,21 +86,21 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                        # "margin":"0px", "--hover-color": "#eee"}, "nav-link-selected": {"background-color": "green"},
                    }
                    )
-# components.html(hvar, height=0, width=0)
-
 
 emp=st.empty()
-st.markdown("""
-<style>
-.big-font {
-    font-size:34vw !important;
-    color:"darkgrey";
-    opacity:0.1;
-    text-align:center;
-}
-</style>
-""", unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# .big-font {
+#     font-size:34vw !important;
+#     color:"darkgrey";
+#     opacity:0.1;
+#     text-align:center;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
+setUI()
+# components.html(hvar, height=0, width=0)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
