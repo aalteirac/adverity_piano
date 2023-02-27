@@ -64,7 +64,7 @@ def setUI():
                     max-width: unset;
                     padding-left: 5em;
                     padding-right: 5em;
-                    padding-top: 0em;
+                    padding-top: 1em;
                     padding-bottom: 1em;
                     }
                 [data-testid="stMetricDelta"] > div:nth-child(2){
