@@ -74,10 +74,10 @@ def setUI():
                 }
                 iframe{
                     transform-origin: 50% 0;
-	                animation: append-animate .9s linear;
+	                animation: append-animate 1.4s linear;
                 }
                 .big-font {
-                    font-size:34vw !important;
+                    font-size:30vw !important;
                     color:"darkgrey";
                     opacity:0.05;
                     text-align:center;
