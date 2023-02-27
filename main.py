@@ -227,3 +227,5 @@ def getPage(sess):
         campaign=getCampaignSelectionBox(map)
     with col0:
         getMap(map)    
+
+ 

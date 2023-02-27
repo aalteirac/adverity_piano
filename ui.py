@@ -51,10 +51,35 @@ def setUI():
                 .stApp header{
                 display:none;
                 }
+                @keyframes append-animate {
+                    from {
+                        transform: scale(0);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: scale(1);
+                        opacity: 1;	
+                    }
+                }
+                @keyframes rotating {
+                    from {
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+                .stMarkdown p {
+                    animation: rotating 2s linear infinite;
+                }
+                iframe{
+                    transform-origin: 50% 0;
+	                animation: append-animate .9s linear;
+                }
                 .big-font {
                     font-size:34vw !important;
                     color:"darkgrey";
-                    opacity:0.1;
+                    opacity:0.05;
                     text-align:center;
                 }
                 .streamlit-expanderHeader p{

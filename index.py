@@ -31,7 +31,7 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
 emp=st.empty()
 
 setUI()
-emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
+emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
