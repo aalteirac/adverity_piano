@@ -84,15 +84,16 @@ def setUI():
                         hide();
                     //}    
                     setTimeout(()=>{
+                            console.log('check ifr')
                             window.parent.document.querySelector(".main").style.overflow="auto";
                             window.parent.document.querySelector(".main").scrollTop = 0;
                             setTimeout(()=>{
                                 toHide=window.parent.document.querySelectorAll('iframe[height="0"]')
                                 for (const iframe of toHide) {
-                                    
-                                    iframe.parentElement.style.display="none"
+                                    if(iframe.hasAttribute("srcdoc"))
+                                        iframe.parentElement.style.display="none"
                                 }
-                            },5000)
+                            },1000)
                         }
                     ,2000)
                 },500,true)
