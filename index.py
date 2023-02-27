@@ -12,65 +12,6 @@ import time
 def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
-hvar = """  <script>
-                function debounce(func, wait, immediate) {
-                    var timeout;
-                    return function() {
-                        var context = this,
-                        args = arguments;
-                        var callNow = immediate && !timeout;
-                        clearTimeout(timeout);
-                        timeout = setTimeout(function() {
-                            timeout = null;
-                            if (!immediate) {
-                                func.apply(context, args);
-                            }
-                        }, wait);
-                        if (callNow) func.apply(context, args);
-                    }
-                }
-
-                function fade(e){
-                    //e.style.transition = "opacity 0s";
-                    //e.style.opacity="0.01";
-                    //window.parent.document.querySelector(".main").style.overflow="hidden";
-                    //window.parent.document.querySelector(".main").scrollTop = 0;
-                    //window.parent.document.body.style.transition = "opacity 0s";
-                    //window.parent.document.body.style.opacity="0.01";
-                    setTimeout(()=>{
-                        window.parent.document.querySelector(".main").style.overflow="auto";
-                        window.parent.document.querySelector(".main").scrollTop = 0;
-                        //e.style.transition = "opacity 0.4s";
-                        //e.style.opacity="1";
-                        //window.parent.document.body.style.position="static";
-                        //window.parent.document.body.style.left="0px";
-                        load=false;
-                    },800)
-                }
-                var load;
-                 window.parent.document.addEventListener("DOMNodeInserted", function (e) {
-                                window.parent.document.querySelector(".main").scrollTop = 0;
-                                window.parent.document.querySelector(".main").style.overflow="hidden";
-                                if(e.target && e.target.classList && (e.target.classList.contains("stMarkdown")) ){
-                                    //e.target.parent.style.display="none";
-                                    //console.log("MARKUP")
-                                }
-                                if (e.target && e.target.classList && (e.target.classList.contains("element-container") || e.target.classList.contains("stHorizontalBlock")))
-                                    fade(e.target)
-                                //debounce(fade,1000,true)
-                                }
-                              , true);      
-                var my_awesome_script = window.parent.document.createElement('script');
-                my_awesome_script.innerHTML=`
-                        var load;
-                        document.addEventListener("DOMNodeInserted", function (event) {
-                            
-                        }, false);`;
-                //window.parent.document.head.appendChild(my_awesome_script);
-
-    
-            </script> """
-
 
 page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive","Country Performance"],
                    icons=['house', 'binoculars-fill', "list-task",'camera-reels','map'],
@@ -88,19 +29,9 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ad
                    )
 
 emp=st.empty()
-# st.markdown("""
-# <style>
-# .big-font {
-#     font-size:34vw !important;
-#     color:"darkgrey";
-#     opacity:0.1;
-#     text-align:center;
-# }
-# </style>
-# """, unsafe_allow_html=True)
+
 setUI()
 emp.markdown('<p class="big-font">🕜</p>', unsafe_allow_html=True)
-# components.html(hvar, height=0, width=0)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
