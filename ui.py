@@ -40,10 +40,10 @@ def setUI():
                                     if(iframe.hasAttribute("srcdoc"))
                                         iframe.parentElement.style.display="none"
                                 }
-                            },3000)
+                            },1000)
                         }
-                    ,1000)
-                },1000,true)
+                    ,3000)
+                },3000,true)
                 , true);   
 
             var my_style= window.parent.document.createElement('style');
@@ -80,7 +80,7 @@ def setUI():
 	                animation: append-animate 1.4s linear;
                 }
                 .big-font {
-                    font-size:30vw !important;
+                    font-size:35vw !important;
                     color:"darkgrey";
                     opacity:0.05;
                     text-align:center;

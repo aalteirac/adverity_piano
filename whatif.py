@@ -98,5 +98,6 @@ def getPage(sess):
             color="CLUSTER",
             hover_name="COUNTRY_NAME",
             size_max=60,
+            height=430
         ) 
-        st.plotly_chart(fig, theme="streamlit", use_container_width=True)   
+        st.plotly_chart(fig, theme="streamlit",use_container_width=True)   
