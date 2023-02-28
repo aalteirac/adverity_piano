@@ -1,5 +1,5 @@
 from streamlit_option_menu import option_menu
-import main,campaign, campaign2,campaign3, campaign4
+import main,campaign, campaign2,campaign3, campaign4,whatif
 from ui import setUI
 import streamlit.components.v1 as components
 import snowflake.connector as sf
@@ -13,8 +13,8 @@ def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
 
-page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive","Country Performance"],
-                   icons=['house', 'binoculars-fill', "list-task",'camera-reels','map'],
+page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive","Country Performance","What If"],
+                   icons=['house', 'binoculars-fill', "list-task",'camera-reels','map','question-circle'],
                    menu_icon="window", default_index=0, orientation="horizontal",
                    styles={
                        "container": {"max-width": "100%!important","--primary-color":"#4a4d4f","--text-color":"#30333f"},
@@ -41,7 +41,9 @@ if page == 'Ads Performance':
 if page == 'Video Deep Dive':
     campaign3.getPage(getSession())      
 if page == 'Country Performance':
-    campaign4.getPage(getSession())        
+    campaign4.getPage(getSession())     
+if page == 'What If':
+    whatif.getPage(getSession())          
 emp.empty()
 # menu_data = [
 #     {'id':'Home','icon':"🐙",'label':"Home"},
