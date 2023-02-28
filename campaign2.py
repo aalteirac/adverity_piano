@@ -167,8 +167,6 @@ def getTableCampaignPerf(df):
     }
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 
-
-
 def getPage(sess):
     global session 
     session = sess

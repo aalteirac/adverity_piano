@@ -71,7 +71,7 @@ def getPage(sess):
     colL,colR=st.columns([1,3])
     with colL:
         getCard("ORIGINAL COST",formatBigNumber(totalcostOrig),'fa fa-money-bill')  
-        getCard('Saving: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True)  
+        getCard('SAVING: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True)  
         cl=st.slider('Cluster Number',2,10,value=5)
     with colR:
         st.subheader("Estimate Saving by Canceling Campaigns in Countries"  ) 

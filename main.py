@@ -215,7 +215,7 @@ def getPage(sess):
     map=getViewsByCity()
     map.rename(str.lower, axis='columns',inplace=True)
     map['cnt'] = np.where((map['geo_country'] == 'Argentina'),
-                                            map['cnt'] *300,
+                                            map['cnt'] *500,
                                             map['cnt'])                                          
     map['cnt'] = np.where((map['geo_country'] == 'Mexico'),
                                             map['cnt'] *900,

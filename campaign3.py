@@ -129,7 +129,6 @@ def getPage(sess):
     global session 
     session = sess
     df=getVideoKPI(getRawCampaign())
-    # st.write(df)
     vws=df[df["index"] == "VIEWS"][0].iloc[0]
     vws25=df[df["index"] == "VIDEO_QUARTILE_25_VIEWS"][0].iloc[0]
     vws50=df[df["index"] == "VIDEO_QUARTILE_50_VIEWS"][0].iloc[0]
@@ -151,6 +150,4 @@ def getPage(sess):
     with colF:
         getChartVideoFunnel(getVideoFunnel(getRawCampaign()))
     with colK:
-        # getBarVideoKPI(getVideoKPI(getRawCampaign()))
         getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))
-    # st.write(getKPIByCountry(getRawCampaign()))
