@@ -13,3 +13,4 @@ leafmap==0.17.1
 pycountry
 geopandas
 mapclassify
+scikit-learn

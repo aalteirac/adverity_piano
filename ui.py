@@ -40,7 +40,7 @@ def setUI():
                                     if(iframe.hasAttribute("srcdoc"))
                                         iframe.parentElement.style.display="none"
                                 }
-                            },1000)
+                            },3000)
                         }
                     ,1000)
                 },1000,true)
@@ -48,6 +48,9 @@ def setUI():
 
             var my_style= window.parent.document.createElement('style');
             my_style.innerHTML=`
+                footer{
+                    display:none;
+                }
                 .stApp header{
                 display:none;
                 }

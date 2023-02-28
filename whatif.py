@@ -4,7 +4,8 @@ import string
 import random
 import hydralit_components as hc
 from math import log, floor
-import numpy as np
+from sklearn.cluster import KMeans
+import plotly.express as px
 
 session=None
 
@@ -46,12 +47,12 @@ def getTotalCost(df):
 def getCountrySelectionBox(raw):
     raw=raw.sort_values(['COUNTRY_NAME'])
     return st.multiselect(
-        'Compare with:',
+        'Remove Country to estimate saving:',
     raw['COUNTRY_NAME'].unique(),default=raw['COUNTRY_NAME'].unique(),key="country")
 
 def getCampaignSelectionBox(map):
     return st.multiselect(
-        'Marketing Campaign:',
+        'Remove Campaign to estimate saving:',
     map['CAMPAIGN'].unique(),default=map['CAMPAIGN'].unique(),key='campaign')
 
 def getPage(sess):
@@ -65,15 +66,37 @@ def getPage(sess):
         dt=dt[dt["COUNTRY_NAME"].isin(countries)]
         dt=dt[dt["CAMPAIGN"].isin(campaings)]
     totalcost=getTotalCost(dt)
-    # st.write(dt)
+    totalcostOrig=getTotalCost(orig)
+    compared=(1-((totalcost/totalcostOrig)))*100
     colL,colR=st.columns([1,3])
     with colL:
-        getCard("TOTAL COST",formatBigNumber(totalcost),'fa fa-money-bill')
+        getCard("ORIGINAL COST",formatBigNumber(totalcostOrig),'fa fa-money-bill')  
+        getCard('Saving: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True)  
+        cl=st.slider('Cluster Number',2,10,value=5)
     with colR:
-        # st.write(dt)
-        # with st.form(key='fil'):
-            countr=getCountrySelectionBox(orig) 
-            campaig=getCampaignSelectionBox(orig)
-            # st.session_state['countries']=countries
-            # if st.form_submit_button():
-                # print('ok')
+        st.subheader("Estimate Saving by Canceling Campaigns in Countries"  ) 
+        countr=getCountrySelectionBox(orig) 
+        campaig=getCampaignSelectionBox(orig)
+        st.subheader("Clustering Countries by ER, CTR and Video Completion"  )      
+        kmeans = KMeans(init="random", n_clusters=cl, n_init=10, random_state=1)
+        orig=orig.groupby(['COUNTRY_NAME']).agg({
+                                        'CTR':"mean",
+                                        'ER':'mean',
+                                        'VIDEO_COMPLETION_RATE':'mean'
+                                        }).reset_index()
+        kmeans.fit(orig[['CTR','ER','VIDEO_COMPLETION_RATE']])  
+        orig['VIDEO_COMPLETION_RATE']=orig['VIDEO_COMPLETION_RATE']*100
+        orig['CLUSTER'] = kmeans.labels_ 
+        orig['CLUSTER']  = orig['CLUSTER']+1
+        orig['CLUSTER']  = orig['CLUSTER'].astype(str)
+        orig=orig.sort_values(['CLUSTER'])
+        fig = px.scatter(
+            orig,
+            y="CTR",
+            size="ER",
+            x='VIDEO_COMPLETION_RATE',
+            color="CLUSTER",
+            hover_name="COUNTRY_NAME",
+            size_max=60,
+        ) 
+        st.plotly_chart(fig, theme="streamlit", use_container_width=True)   
