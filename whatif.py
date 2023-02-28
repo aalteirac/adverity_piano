@@ -75,8 +75,8 @@ def getPage(sess):
         cl=st.slider('Cluster Number',2,10,value=5)
     with colR:
         st.subheader("Estimate Saving by Canceling Campaigns in Countries"  ) 
-        countr=getCountrySelectionBox(orig) 
-        campaig=getCampaignSelectionBox(orig)
+        getCountrySelectionBox(orig) 
+        getCampaignSelectionBox(orig)
         st.subheader("Clustering Countries by ER, CTR and Video Completion"  )      
         kmeans = KMeans(init="random", n_clusters=cl, n_init=10, random_state=1)
         orig=orig.groupby(['COUNTRY_NAME']).agg({
@@ -98,8 +98,6 @@ def getPage(sess):
             color="CLUSTER",
             hover_name="COUNTRY_NAME",
             size_max=30,
-            # sizeref=0.8,
-            # sizemin=4,
             height=430
         ) 
         st.plotly_chart(fig, theme="streamlit",use_container_width=True)   

@@ -37,7 +37,7 @@ metricsIcons=['fa fa-mobile',
         'fa fa-wifi'
         ]   
 
-def getCard(text,val,icon, compare=False):
+def getCard(text,val,icon, compare=False,titleTextSize="16vw",content_text_size="10vw"):
     letters = string.ascii_lowercase
     key = ''.join(random.choice(letters) for i in range(8))
     pgcol='green'
@@ -48,9 +48,9 @@ def getCard(text,val,icon, compare=False):
     style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
     icoSize="20vw"
     if compare==False:
-        hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style)
+        hc.info_card(key=key,title=val, title_text_size=titleTextSize,content=str(text),content_text_size=content_text_size,icon_size=icoSize,theme_override=style)
     else:
-        hc.info_card(key=key,title=val, title_text_size="16vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style,bar_value=100)    
+        hc.info_card(key=key,title=val, title_text_size=titleTextSize,content=str(text),content_text_size=content_text_size,icon_size=icoSize,theme_override=style,bar_value=100)    
 
 @st.cache_data
 def getBroadband():
@@ -71,16 +71,6 @@ def getViewsByCity():
         to_date(EVENT_TIME) BETWEEN '2022-10-02' AND '2023-02-25'
     group by geo_country, geo_city,geo_latitude,geo_longitude
     '''
-    df = pd.read_sql(queryAll, session)
-    return df
-
-def getAllViews():
-    queryAll=f'''
-        SELECT  site_id,src_campaign,av_session_id,event_time,geo_city,geo_country,geo_latitude as lat,geo_longitude as lon,av_show, av_episode
-        FROM ATIDEMO.stream.events
-        Where av_session_id is not null and av_show is not null and
-        to_date(EVENT_TIME) BETWEEN '2020-01-02' AND '2020-06-02';
-         '''
     df = pd.read_sql(queryAll, session)
     return df
 
@@ -114,7 +104,7 @@ def getCountrySelectionBox(raw):
 def getCampaignSelectionBox(map):
     return st.selectbox(
         'Marketing Campaign:',
-    np.insert(map['campaign'].unique(),0,['Select Marketing Campaign...']),0)
+    np.insert(map['campaign'].unique(),0,['Select Marketing Campaign...']),0,key='mktcpg')
 
 def getCountryKPI(country,raw,worldwide):
     if country!='Select Country...':
@@ -183,7 +173,7 @@ def getMap2(map):
                 ],
         ))             
 
-def getMap(map):
+def getMap(map,b,r):
     agg=map.groupby(['geo_country']).mean().reset_index()
     m = leafmap.Map(center=[15, -40], zoom=2,)
     m.add_heatmap(
@@ -192,10 +182,10 @@ def getMap(map):
         longitude="lon",
         value="cnt",
         name="Heat map",
-        radius=33,
-        blur=22
+        radius=r,
+        blur=b
     )
-    m.to_streamlit(height=410,)
+    m.to_streamlit(height=506,)
 
 def getPage(sess):
     global session
@@ -214,18 +204,40 @@ def getPage(sess):
 
     map=getViewsByCity()
     map.rename(str.lower, axis='columns',inplace=True)
-    map['cnt'] = np.where((map['geo_country'] == 'Argentina'),
-                                            map['cnt'] *500,
-                                            map['cnt'])                                          
-    map['cnt'] = np.where((map['geo_country'] == 'Mexico'),
-                                            map['cnt'] *900,
-                                            map['cnt'])           
+    cpg=map.copy()
+    if st.session_state.get('mktcpg') is not None:
+        if st.session_state.get('mktcpg')=='Select Marketing Campaign...':
+            map=cpg.copy()
+        else:    
+            map=map[map["campaign"].isin([st.session_state.get('mktcpg')])] 
+    try:
+        map['lat']= np.where(map['geo_country'] == 'Netherlands' ,
+                                            map[(map['geo_country'] == "Argentina")]['lat'].iloc[0],
+                                            map['lat'])    
+        map['lon']= np.where(map['geo_country'] == 'Netherlands' ,
+                                                map[(map['geo_country'] == "Argentina")]['lon'].iloc[0],
+                                                map['lon'])   
+        map['geo_country']= np.where(map['geo_country'] == 'Netherlands' ,
+                                                'Argentina',
+                                                map['geo_country'])             
+        map['cnt'] = np.where((map['geo_country'] == 'Argentina') ,
+                                                map['cnt'] *500,
+                                                map['cnt'])                                          
+        map['cnt'] = np.where((map['geo_country'] == 'Mexico'),
+                                                map['cnt'] *700,
+                                                map['cnt']) 
+    except:
+        print('q&d')              
     st.subheader("Trailers Views Buffering Rate (Piano)")
 
     col0,col1=st.columns(2)
     with col1:
-        campaign=getCampaignSelectionBox(map)
+        getCampaignSelectionBox(cpg)
+        cpgd=map[ map['cnt']== map["cnt"].max()]['geo_country'].iloc[0] 
+        getCard(cpgd,'High Buffering', 'fa fa-thumbs-down',titleTextSize='11vw',content_text_size='11vw')
     with col0:
-        getMap(map)    
+        # blur=st.slider('blur',1,100,13)
+        # rad=st.slider('radius',1,100,14)
+        getMap(map,15,20)    
 
  

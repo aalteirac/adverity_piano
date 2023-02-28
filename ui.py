@@ -46,6 +46,14 @@ def setUI():
                 },3000,true)
                 , true);   
 
+            setTimeout(()=>{
+                toHide=window.parent.document.querySelectorAll('iframe[height="0"]')
+                for (const iframe of toHide) {
+                    if(iframe.hasAttribute("srcdoc"))
+                        iframe.parentElement.style.display="none"
+                }
+            },1000)
+
             var my_style= window.parent.document.createElement('style');
             my_style.innerHTML=`
                 footer{
