@@ -97,7 +97,9 @@ def getPage(sess):
             x='VIDEO_COMPLETION_RATE',
             color="CLUSTER",
             hover_name="COUNTRY_NAME",
-            size_max=60,
+            size_max=30,
+            # sizeref=0.8,
+            # sizemin=4,
             height=430
         ) 
         st.plotly_chart(fig, theme="streamlit",use_container_width=True)   
