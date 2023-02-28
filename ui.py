@@ -80,6 +80,9 @@ def setUI():
                         transform: rotate(360deg);
                     }
                 }
+                .stMarkdown {
+                    z-index:1000;
+                }
                 .stMarkdown p {
                     animation: rotating 2s linear infinite;
                 }
