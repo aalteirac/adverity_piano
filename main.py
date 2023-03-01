@@ -235,7 +235,7 @@ def getPage(sess):
         getCampaignSelectionBox(cpg)
         cpgd=map[ map['cnt']== map["cnt"].max()]['geo_country'].iloc[0]
         if cpgd is not None: 
-            getCard(cpgd,'High Buffering', 'fa fa-thumbs-down',titleTextSize='11vw',content_text_size='11vw')
+            getCard(cpgd,'High Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')
     with col0:
         # blur=st.slider('blur',1,100,13)
         # rad=st.slider('radius',1,100,14)

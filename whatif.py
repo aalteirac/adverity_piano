@@ -108,7 +108,7 @@ def getPage(sess):
             getCountrySelectionBox(orig,dt) 
             getCampaignSelectionBox(orig,dt)  
         st.subheader("Clustering Countries by ER, CTR and Video Completion"  )       
-        clus.multiselect('Exclude Cluster:',np.unique(kmeans.labels_),key='clusterstore')
+        clus.multiselect('Exclude Cluster (Preempts All Other Exclusions):',np.unique(kmeans.labels_),key='clusterstore')
         
         fig = px.scatter(
             clusterDF,
