@@ -34,7 +34,7 @@ def getCard(text,val,icon, compare=False):
     else:
         return hc.info_card(key=key,title=val, title_text_size="13vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style,bar_value=100)    
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False,ttl=1000)
 def getRawCampaign():
     queryAll=f'''
     SELECT *,to_date(TO_VARCHAR(DAY, 'yyyy-MM-01')) as MONTH,coalesce((clicks/NULLIF(impressions,0))*100,0) as CTR,coalesce(((clicks + likes + shares)/NULLIF(impressions,0))*100,0) as ER from adverity.adverity."Marketing_Data";
@@ -84,10 +84,14 @@ def getPage(sess):
             countries=dt['COUNTRY_NAME'].unique()
             campaings=dt['CAMPAIGN'].unique()
             # st.write(dt)
-
-    if countries is not None:
-        dt=dt[dt["COUNTRY_NAME"].isin(countries)]
-        dt=dt[dt["CAMPAIGN"].isin(campaings)]
+    if clusterSelected is not None:
+        if countries is not None and len(clusterSelected)==0:
+            dt=dt[dt["COUNTRY_NAME"].isin(orig['COUNTRY_NAME'].unique())]
+            dt=dt[dt["CAMPAIGN"].isin(orig['CAMPAIGN'].unique())]
+    else:
+        if countries is not None:
+            dt=dt[dt["COUNTRY_NAME"].isin(countries)]
+            dt=dt[dt["CAMPAIGN"].isin(campaings)]
     totalcost=getTotalCost(dt)
     totalcostOrig=getTotalCost(orig)
     compared=(1-((totalcost/totalcostOrig)))*100
