@@ -23,12 +23,7 @@ def getCTRByGenderByAge(df):
     return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'}).reset_index()
 
 def getKPIByCampaignAds(df):
-    return df.groupby(['CAMPAIGN','AD_TYPE','AD_NAME']).agg({'IMPRESSIONS':'sum',
-                                      'CLICKS':'sum',
-                                      'CTR':"mean",
-                                      'CPV':'mean',
-                                      'CPCV':'mean'
-                                      }).reset_index()
+    return df[['CAMPAIGN','AD_TYPE','AD_NAME','IMPRESSIONS', 'CLICKS','CTR','CPV','CPCV']].sort_values(['CAMPAIGN'])
 
 def getCTRByDevice(df):
     return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'}).reset_index()
@@ -154,10 +149,12 @@ def getEuroRendererCPV():
             return '<span>' + parseFloat(params.value).toFixed(2) + '€</span>'}
     ''') 
     return rd  
+
 def getTableCampaignPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
+    ob.configure_column('AD_NAME', rowGroup=True,hide= True)
     ob.configure_column('IMPRESSIONS', aggFunc='sum',header_name='IMPRESSIONS')
     ob.configure_column('CLICKS', aggFunc='sum', header_name='CLICKS')
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR',cellRenderer= getPercentRenderer())

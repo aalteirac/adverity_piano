@@ -175,9 +175,7 @@ def getEuroRendererCPCV():
     return rd  
 
 def getTableCountryPerf(df):
-    df = df[['COUNTRY_NAME', 'CAMPAIGN', 'AD_TYPE', 'CTR', 'VIEWS','CPV','VIDEO_COMPLETIONS','CPCV']]
     ob = GridOptionsBuilder.from_dataframe(df)
-    # order column
     ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
@@ -187,7 +185,6 @@ def getTableCountryPerf(df):
     ob.configure_column('CPV', aggFunc='avg',header_name='COST PER VIDEO VIEW',cellRenderer=getEuroRendererCPV())
     ob.configure_column('CPCV', aggFunc='avg',header_name='COST PER VIDEO COMPLETED',cellRenderer=getEuroRendererCPCV())
     ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')
-    # ob.configure_column('VIDEO_COMPLETION_RATE', aggFunc='avg',header_name='VIDEO COMPLETION RATE(%)',cellRenderer= getPercentRendererComp())
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
@@ -211,19 +208,12 @@ def getTableCountryPerf(df):
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 
 def getKPIByCountry(df):
-    df=df.groupby(['COUNTRY_NAME','CAMPAIGN','AD_TYPE','AD_NAME']).agg({
-                                      'CTR':"mean",
-                                      'VIDEO_COMPLETIONS':'sum',
-                                      'VIEWS':'sum',
-                                      'CPV':'mean',
-                                      'CPCV':'mean'
-                                      }).reset_index()
+    df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE','AD_NAME', 'CTR', 'VIEWS','CPV','VIDEO_COMPLETIONS','CPCV']].sort_values(['COUNTRY_NAME'])
     return df
 
 def getPage(sess):
     global session 
     session = sess
-    # st.write(getRawCampaign())
     df=getVideoKPI(getRawCampaign())
     vws=df[df["index"] == "VIEWS"][0].iloc[0]
     vws25=df[df["index"] == "VIDEO_QUARTILE_25_VIEWS"][0].iloc[0]
@@ -247,9 +237,3 @@ def getPage(sess):
             getCard("COMPLETE VIEW",str(formatBigNumber(vwsComp)), "fa fa-film")                
         getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))
     getTableCountryPerf(getKPIByCountry(getRawCampaign()))
-    # st.write(getRawCampaign())
-    # colF,colK=st.columns([3,3])
-    # with colF:
-    #     getChartVideoFunnel(getVideoFunnel(getRawCampaign()))
-    # with colK:
-    #     getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))
