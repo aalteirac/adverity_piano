@@ -96,15 +96,30 @@ def getVideoForMap(df):
     return df
 
 def getKPIByCountry(df):
+    df['25% VIEWED']=(1-(df['VIDEO_QUARTILE_25_VIEWS']/df['VIEWS']))*100
+    df['50% VIEWED']=(1-(df['VIDEO_QUARTILE_50_VIEWS']/df['VIEWS']))*100
+    df['75% VIEWED']=(1-(df['VIDEO_QUARTILE_75_VIEWS']/df['VIEWS']))*100
+    # df['VIEWED']=(df['VIEWS']/df['QUARTILE SUM'])*100
+    # return df[['25% VIEWED', '50% VIEWED','75% VIEWED','COMPLETED','VIEWED']].mean().reset_index()
     df=df.groupby(['COUNTRY_NAME','CAMPAIGN','AD_TYPE','AD_NAME']).agg({
                                       'CTR':"mean",
-                                      'VIDEO_COMPLETIONS':'sum',
+                                      'VIEWS':"sum",
+                                      '25% VIEWED':"mean",
+                                      '50% VIEWED':"mean",
+                                      '75% VIEWED':"mean",
                                       'VIDEO_COMPLETION_RATE':'mean'
                                       }).reset_index()
     df['VIDEO_COMPLETION_RATE']=df['VIDEO_COMPLETION_RATE']*100
     return df
 
 def getPercentRenderer():
+    rd = JsCode('''
+        function(params) {  
+            return '<span>' + parseFloat(params.value).toFixed(2) + '%</span>'}
+    ''') 
+    return rd
+
+def getPercentCTRRenderer():
     rd = JsCode('''
         function(params) {
             var color='green';
@@ -120,9 +135,9 @@ def getPercentRendererComp():
     rd = JsCode('''
         function(params) {
             var color='green';
-            if(params.value<25)
+            if(params.value<5)
                 color="red";
-            if(params.value>25 && params.value<30)
+            if(params.value>=5 && params.value<7)
                 color="#ffc700";    
             return '<span style="color:'+color + '">' + parseFloat(params.value).toFixed(2) + '%</span>'}
     ''') 
@@ -133,8 +148,12 @@ def getTableCountryPerf(df):
     ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
-    ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentRenderer())
-    ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')
+    ob.configure_column('AD_NAME', rowGroup=True,hide= True,columnGroupShow='open')
+    ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentCTRRenderer())
+    ob.configure_column('VIEWS', aggFunc='sum')
+    ob.configure_column('25% VIEWED', aggFunc='avg',header_name='DROP OFF 25%',cellRenderer= getPercentRenderer())
+    ob.configure_column('50% VIEWED', aggFunc='avg',header_name='DROP OFF 50%',cellRenderer= getPercentRenderer())
+    ob.configure_column('75% VIEWED', aggFunc='avg',header_name='DROP OFF 75%',cellRenderer= getPercentRenderer())
     ob.configure_column('VIDEO_COMPLETION_RATE', aggFunc='avg',header_name='VIDEO COMPLETION RATE(%)',cellRenderer= getPercentRendererComp())
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
@@ -177,4 +196,3 @@ def getPage(sess):
     with colMap2:
         getMapConversion(getVideoForMap(rawcampDF),'VIDEO_COMPLETION_RATE')     
     getTableCountryPerf(getKPIByCountry(rawcampDF))
-    # st.write(getKPIByCountry(getRawCampaign()))

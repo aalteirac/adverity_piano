@@ -25,7 +25,10 @@ def getCTRByGenderByAge(df):
 def getKPIByCampaignAds(df):
     return df.groupby(['CAMPAIGN','AD_TYPE','AD_NAME']).agg({'IMPRESSIONS':'sum',
                                       'CLICKS':'sum',
-                                      'CTR':"mean"}).reset_index()
+                                      'CTR':"mean",
+                                      'CPV':'mean',
+                                      'CPCV':'mean'
+                                      }).reset_index()
 
 def getCTRByDevice(df):
     return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'}).reset_index()
@@ -145,6 +148,12 @@ def genSankey(df,cat_cols=[],value_cols='',title='Sankey Diagram'):
     fig = dict(data=[data], layout=layout)
     st.plotly_chart(fig, theme="streamlit",use_container_width=True)
 
+def getEuroRendererCPV():
+    rd = JsCode('''
+        function(params) { 
+            return '<span>' + parseFloat(params.value).toFixed(2) + '€</span>'}
+    ''') 
+    return rd  
 def getTableCampaignPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
@@ -152,6 +161,8 @@ def getTableCampaignPerf(df):
     ob.configure_column('IMPRESSIONS', aggFunc='sum',header_name='IMPRESSIONS')
     ob.configure_column('CLICKS', aggFunc='sum', header_name='CLICKS')
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR',cellRenderer= getPercentRenderer())
+    ob.configure_column('CPV', aggFunc='avg',header_name='COST PER VIDEO VIEW',cellRenderer= getEuroRendererCPV())
+    ob.configure_column('CPCV', aggFunc='avg',header_name='COST PER VIDEO COMPLETED',cellRenderer= getEuroRendererCPV())
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
@@ -172,7 +183,7 @@ def getTableCampaignPerf(df):
       "suppressCount": True,
         },
     }
-    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
+    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True)
 
 def getPage(sess):
     global session 
