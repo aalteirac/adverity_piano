@@ -31,7 +31,8 @@ def setUI():
                         hide();
                         //console.log('TEST')
                     //}    
-                    setTimeout(()=>{
+                    tm=setTimeout(()=>{
+                            clearTimeout(tm)
                             window.parent.document.querySelector(".main").style.overflow="auto";
                             window.parent.document.querySelector(".main").scrollTop = 0;
                             setTimeout(()=>{
@@ -43,7 +44,7 @@ def setUI():
                             },1000)
                         }
                     ,3000)
-                },3000,true)
+                },1000,true)
                 , true);   
 
             setTimeout(()=>{
