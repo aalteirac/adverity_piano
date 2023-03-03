@@ -13,7 +13,7 @@ def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
 
-page = option_menu("Piano-Adverity-Snowflake", ["Home", "Campaigns Overview","Ads Performance","Video Deep Dive","Country Performance","'What If' Estimation"],
+page = option_menu("Piano-Adverity-Snowflake", ["Home","Country Performance", "Campaigns Overview","Video Deep Dive","Ads Performance","'What If' Estimation"],
                    icons=['house', 'binoculars-fill', "list-task",'camera-reels','map','question-circle'],
                    menu_icon="window", default_index=0, orientation="horizontal",
                    styles={

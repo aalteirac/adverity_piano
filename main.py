@@ -227,15 +227,21 @@ def getPage(sess):
                                                 map['cnt'] *700,
                                                 map['cnt']) 
     except:
-        print('q&d')              
+        print('Empty')              
     st.subheader("Trailers Views Buffering Rate (Piano)")
 
     col0,col1=st.columns(2)
     with col1:
         getCampaignSelectionBox(cpg)
         cpgd=map[ map['cnt']== map["cnt"].max()]['geo_country'].iloc[0]
+        # cpgl=map[ map['cnt']== map["cnt"].min()]['geo_country'].iloc[0]
+        # colnested1,colnested2=st.columns(2)
         if cpgd is not None: 
+            # with colnested1:
             getCard(cpgd,'High Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')
+        # if cpgd is not None: 
+        #     with colnested2:
+        #         getCard(cpgl,'Low Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')    
     with col0:
         # blur=st.slider('blur',1,100,13)
         # rad=st.slider('radius',1,100,14)
