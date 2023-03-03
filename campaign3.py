@@ -5,6 +5,7 @@ import string
 import random
 import hydralit_components as hc
 from math import log, floor
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
 
 session=None
@@ -81,7 +82,7 @@ def getChartVideoFunnel(df):
     fig.update_layout(
         title="Video Completion Rate",
         autosize=False,
-        height=640,
+        height=500,
         margin=dict(
             l=0,
             r=0,
@@ -111,7 +112,7 @@ def getChartVideoByCampaign(df):
     config = {'displayModeBar': False}
     fig.update_layout(
         autosize=False,
-        height=650,
+        height=320,
         margin=dict(
             l=0,
             r=0,
@@ -125,6 +126,69 @@ def getChartVideoByCampaign(df):
     fig.update_layout(yaxis_range=[df['VIDEO_COMPLETIONS'].min() - (df['VIDEO_COMPLETIONS'].min()/40),df['VIDEO_COMPLETIONS'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig,config=config, theme="streamlit",use_container_width=True)
 
+def getPercentRenderer():
+    rd = JsCode('''
+        function(params) {
+            var color='green';
+            if(params.value<1)
+                color="red";
+            if(params.value>1 && params.value<1.1)
+                color="#ffc700";    
+            return '<span style="color:'+color + '">' + parseFloat(params.value).toFixed(2) + '%</span>'}
+    ''') 
+    return rd
+  
+def getPercentRendererComp():
+    rd = JsCode('''
+        function(params) {
+            var color='green';
+            if(params.value<25)
+                color="red";
+            if(params.value>25 && params.value<30)
+                color="#ffc700";    
+            return '<span style="color:'+color + '">' + parseFloat(params.value).toFixed(2) + '%</span>'}
+    ''') 
+    return rd   
+
+def getTableCountryPerf(df):
+    ob = GridOptionsBuilder.from_dataframe(df)
+    ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
+    ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
+    ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
+    ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentRenderer())
+    ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')
+    ob.configure_column('VIDEO_COMPLETION_RATE', aggFunc='avg',header_name='VIDEO COMPLETION RATE(%)',cellRenderer= getPercentRendererComp())
+    
+    ob.configure_grid_options(suppressAggFuncInHeader = True)
+    custom_css = {
+        ".ag-watermark":{
+            "display":"none!important"
+        },
+        ".ag-root-wrapper":{
+             "margin-top":"28px",
+             "border-bottom": "2px",
+             "border-bottom-color": "#b9b5b5",
+             "border-bottom-style": "double"
+             }
+        }
+    gripOption=ob.build()
+    gripOption["autoGroupColumnDef"]= {
+    "headerName": 'COUNTRY/CAMPAIGN/AD_TYPE',
+    "cellRendererParams": {
+      "suppressCount": True,
+        },
+    }
+    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
+
+def getKPIByCountry(df):
+    df=df.groupby(['COUNTRY_NAME','CAMPAIGN','AD_TYPE','AD_NAME']).agg({
+                                      'CTR':"mean",
+                                      'VIDEO_COMPLETIONS':'sum',
+                                      'VIDEO_COMPLETION_RATE':'mean'
+                                      }).reset_index()
+    df['VIDEO_COMPLETION_RATE']=df['VIDEO_COMPLETION_RATE']*100
+    return df
+
 def getPage(sess):
     global session 
     session = sess
@@ -134,20 +198,25 @@ def getPage(sess):
     vws50=df[df["index"] == "VIDEO_QUARTILE_50_VIEWS"][0].iloc[0]
     vws75=df[df["index"] == "VIDEO_QUARTILE_75_VIEWS"][0].iloc[0]
     vwsComp=df[df["index"] == "VIDEO_COMPLETIONS"][0].iloc[0]
-    col1,col2,col3,col4,col5=st.columns(5)
-    with col1:
-        getCard("TOTAL VIEWED",str(formatBigNumber(vws)), "fa fa-video")
-    with col2:
-        getCard("25% VIEWED",str(formatBigNumber(vws25)), "")
-    with col3:
-        getCard("50% VIEWED",str(formatBigNumber(vws50)), "")
-    with col4:
-        getCard("75% VIEWED",str(formatBigNumber(vws75)), "")
-    with col5:
-        getCard("COMPLETE VIEW",str(formatBigNumber(vwsComp)), "fa fa-film")                
-
-    colF,colK=st.columns([3,3])
-    with colF:
+    colMain1,colMain2=st.columns([2,3])
+    with colMain1:
         getChartVideoFunnel(getVideoFunnel(getRawCampaign()))
-    with colK:
+    with colMain2:    
+        col1,col2,col3,col4,col5=st.columns(5)
+        with col1:
+            getCard("TOTAL VIEWED",str(formatBigNumber(vws)), "fa fa-video")
+        with col2:
+            getCard("25% VIEWED",str(formatBigNumber(vws25)), "")
+        with col3:
+            getCard("50% VIEWED",str(formatBigNumber(vws50)), "")
+        with col4:
+            getCard("75% VIEWED",str(formatBigNumber(vws75)), "")
+        with col5:
+            getCard("COMPLETE VIEW",str(formatBigNumber(vwsComp)), "fa fa-film")                
         getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))
+    getTableCountryPerf(getKPIByCountry(getRawCampaign()))
+    # colF,colK=st.columns([3,3])
+    # with colF:
+    #     getChartVideoFunnel(getVideoFunnel(getRawCampaign()))
+    # with colK:
+    #     getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))

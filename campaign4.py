@@ -5,6 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 import pycountry
 import geopandas
 import leafmap.foliumap as leafmap
+import numpy as np
 
 
 
@@ -160,10 +161,20 @@ def getTableCountryPerf(df):
 def getPage(sess):
     global session 
     session = sess
+    rawcampDF=getRawCampaign()
+    colCt,colCg= st.columns(2)
+    uniqueCountries=np.sort( np.insert(rawcampDF['COUNTRY_NAME'].unique(),0,['ALL']) )
+    uniqueCampaigns=np.insert(rawcampDF['CAMPAIGN'].unique(),0,['ALL'])
+    countryFilter=colCt.selectbox("Select Country:", uniqueCountries)
+    campaignFilter=colCg.selectbox("Select Campaign:", uniqueCampaigns)
+    if countryFilter!='ALL':
+        rawcampDF=rawcampDF[(rawcampDF['COUNTRY_NAME'] == countryFilter)]
+    if campaignFilter!='ALL':
+        rawcampDF=rawcampDF[(rawcampDF['CAMPAIGN'] == campaignFilter)]    
     colMap1,colMap2=st.columns(2)
     with colMap1:
-        getMapConversion(getVideoForMap(getRawCampaign()),'CONVERSIONS') 
+        getMapConversion(getVideoForMap(rawcampDF),'CONVERSIONS') 
     with colMap2:
-        getMapConversion(getVideoForMap(getRawCampaign()),'VIDEO_COMPLETION_RATE')     
-    getTableCountryPerf(getKPIByCountry(getRawCampaign()))
+        getMapConversion(getVideoForMap(rawcampDF),'VIDEO_COMPLETION_RATE')     
+    getTableCountryPerf(getKPIByCountry(rawcampDF))
     # st.write(getKPIByCountry(getRawCampaign()))

@@ -65,8 +65,15 @@ def getChartTopAds(df,asc=True,prefix='Top'):
     ])
     fig.update_xaxes(visible=False, showticklabels=False)
     fig.data[0].marker.color = ('blue','green','darkgrey')
+    fig.update_layout(margin=dict(
+            l=0,
+            r=0,
+            b=0,
+            t=30,
+            pad=4
+        ))
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
-    fig.update_layout(height=340,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
+    fig.update_layout(height=490,title=prefix+' Performing Ads by ER(%)',xaxis_range=[df['ER'].min() - (df['ER'].min()/50),df['ER'].max()]) #yaxis_range=[1.2,1.25]
     config = {
         "displayModeBar": False
     }
@@ -171,16 +178,24 @@ def getPage(sess):
     global session 
     session = sess
     # st.subheader("Ads Performance Deep Dive")
-    colL,colR=st.columns(2)
-    with colR:
-        genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
+    colL,colR,colRR=st.columns([2,1,1])
     with colL:
         getChartCTRByDevice(getCTRByDevice(getRawCampaign()))
+    with colR:  
+        getChartTopAds(getTopBottomAds(getRawCampaign()))   
+    with colRR:
+        getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')   
+    getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))        
+    # colL,colR=st.columns(2)
+    # with colR:
+    #     genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
+    # with colL:
+    #     getChartCTRByDevice(getCTRByDevice(getRawCampaign()))
     
-    colAd1,colAd2,colTable=st.columns([1,1,3])   
-    with colAd1: 
-        getChartTopAds(getTopBottomAds(getRawCampaign()))    
-    with colAd2: 
-        getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')    
-    with colTable:
-        getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))       
+    # colAd1,colAd2,colTable=st.columns([1,1,3])   
+    # with colAd1: 
+    #     getChartTopAds(getTopBottomAds(getRawCampaign()))    
+    # with colAd2: 
+    #     getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')    
+    # with colTable:
+    #     getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))       

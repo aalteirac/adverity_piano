@@ -6,7 +6,7 @@ import string
 import plotly.graph_objects as go
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
 import pycountry
-import geopandas
+import numpy as np
 import leafmap.foliumap as leafmap
 import time
 
@@ -77,6 +77,16 @@ def getKPIByMonth(df):
 def getPage(sess):
     global session 
     session = sess
+    rawcampDF=getRawCampaign()
+    colCt,colCg= st.columns(2)
+    uniqueCountries=np.sort( np.insert(rawcampDF['COUNTRY_NAME'].unique(),0,['ALL']) )
+    uniqueCampaigns=np.insert(rawcampDF['CAMPAIGN'].unique(),0,['ALL'])
+    countryFilter=colCt.selectbox("Select Country:", uniqueCountries)
+    campaignFilter=colCg.selectbox("Select Campaign:", uniqueCampaigns)
+    if countryFilter!='ALL':
+        rawcampDF=rawcampDF[(rawcampDF['COUNTRY_NAME'] == countryFilter)]
+    if campaignFilter!='ALL':
+        rawcampDF=rawcampDF[(rawcampDF['CAMPAIGN'] == campaignFilter)]    
     # st.write(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum'))
     # st.write(getGlobalKPI( getRawCampaign(),'CLICKS','sum'))
     # st.write(getGlobalKPI( getRawCampaign(),'CTR','mean'))
@@ -89,12 +99,12 @@ def getPage(sess):
     # st.write(getVideoCompletionDrillDown(getRawCampaign()))
     col1, col2,col3,col4 = st.columns(4)
     with col1:
-        getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum')),'fa fa-print')
+        getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
     with col2:
-        getCard("CLICKS","{:,}".format(getGlobalKPI( getRawCampaign(),'CLICKS','sum')),'fa fa-hand-pointer')
+        getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
     with col3:
-        getCard("CTR (%)",str(  round(getGlobalKPI( getRawCampaign(),'CTR','mean'),2)) +"%",'fa fa-money-bill')
+        getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
     with col4:
-        getCard("ER (%)",str(  round(getGlobalKPI( getRawCampaign(),'ER','mean'),2)) +"%",'fa fa-heart')
-    getChartClickCTR(getKPIByMonth(getRawCampaign()))
+        getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart')
+    getChartClickCTR(getKPIByMonth(rawcampDF))
  
