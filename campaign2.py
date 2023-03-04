@@ -23,7 +23,9 @@ def getCTRByGenderByAge(df):
     return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'}).reset_index()
 
 def getKPIByCampaignAds(df):
-    return df[['CAMPAIGN','AD_TYPE','AD_NAME','IMPRESSIONS', 'CLICKS','CTR','CPV','CPCV']].sort_values(['CAMPAIGN'])
+    df['CPVMANUAL']=0
+    df['CPCVMANUAL']=0
+    return df[['CAMPAIGN','AD_TYPE','AD_NAME','IMPRESSIONS', 'CLICKS','CTR','CPVMANUAL','CPCVMANUAL','COSTS','VIDEO_COMPLETIONS','VIEWS']].sort_values(['CAMPAIGN'])
 
 def getCTRByDevice(df):
     return df.groupby(['DEVICE_TYPE']).agg({'CTR':'mean'}).reset_index()
@@ -150,6 +152,22 @@ def getEuroRendererCPV():
     ''') 
     return rd  
 
+def customAggCPV():
+    rd=JsCode('''
+    function(params) {
+                return params.node.aggData.COSTS/params.node.aggData.VIEWS;
+            }
+    ''')
+    return rd
+
+def customAggCPCV():
+    rd=JsCode('''
+    function(params) {
+                return params.node.aggData.COSTS/params.node.aggData.VIDEO_COMPLETIONS;
+            }
+    ''')
+    return rd
+
 def getTableCampaignPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
@@ -157,9 +175,12 @@ def getTableCampaignPerf(df):
     ob.configure_column('AD_NAME', rowGroup=True,hide= True)
     ob.configure_column('IMPRESSIONS', aggFunc='sum',header_name='IMPRESSIONS')
     ob.configure_column('CLICKS', aggFunc='sum', header_name='CLICKS')
+    ob.configure_column('COSTS', aggFunc='sum', hide=True)
+    ob.configure_column('VIEWS', aggFunc='sum', hide=True)
+    ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', hide=True)
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR',cellRenderer= getPercentRenderer())
-    ob.configure_column('CPV', aggFunc='avg',header_name='COST PER VIDEO VIEW',cellRenderer= getEuroRendererCPV())
-    ob.configure_column('CPCV', aggFunc='avg',header_name='COST PER VIDEO COMPLETED',cellRenderer= getEuroRendererCPV())
+    ob.configure_column('CPVMANUAL', valueGetter=customAggCPV(),header_name='COST PER VIDEO VIEW',cellRenderer= getEuroRendererCPV())
+    ob.configure_column('CPCVMANUAL',valueGetter=customAggCPCV(),header_name='COST PER VIDEO COMPLETED',cellRenderer= getEuroRendererCPV())
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
