@@ -176,15 +176,17 @@ def getEuroRendererCPCV():
 
 def getTableCountryPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
+
     ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentRenderer())
-    
     ob.configure_column('VIEWS', aggFunc='sum', header_name='VIDEO VIEWS')
     ob.configure_column('CPV', aggFunc='avg',header_name='COST PER VIDEO VIEW',cellRenderer=getEuroRendererCPV())
     ob.configure_column('CPCV', aggFunc='avg',header_name='COST PER VIDEO COMPLETED',cellRenderer=getEuroRendererCPCV())
     ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')
+
+    # ob.configure_column('CPVTEST', aggFunc='avg',header_name='COST PER VIDEO VIEWEEDDDD',cellRenderer=getEuroRendererCPCV())
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
@@ -207,7 +209,22 @@ def getTableCountryPerf(df):
     }
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 
+def divide_two_cols(df_sub):
+    df_sub['CPVTEST']=df_sub['COSTS'].sum() / df_sub['VIEWS'].sum()
+    return df_sub
+
 def getKPIByCountry(df):
+    # df2=df[(df['COUNTRY_NAME']=='Belgium') & (df['CAMPAIGN']=='46')]
+    # df2=df.groupby(['COUNTRY_NAME','CAMPAIGN','AD_TYPE','AD_NAME']).apply(divide_two_cols).reset_index()
+    # df.rename(columns={0: 'CPVTEST'}, inplace=True)
+    # df2=df.groupby(['COUNTRY_NAME']).agg({
+    #                                   'CTR':"mean",
+    #                                   'VIEWS':"sum",
+    #                                   'CPV':"mad",
+    #                                   'COSTS':'sum'
+    #                                   }).reset_index()
+    # df2['CPVMANUAL']=df2['COSTS']/df2['VIEWS']
+    # st.write(df2)
     df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE','AD_NAME', 'CTR', 'VIEWS','CPV','VIDEO_COMPLETIONS','CPCV']].sort_values(['COUNTRY_NAME'])
     return df
 

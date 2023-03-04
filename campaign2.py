@@ -194,16 +194,4 @@ def getPage(sess):
     with colRR:
         getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')   
     getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))        
-    # colL,colR=st.columns(2)
-    # with colR:
-    #     genSankey(getCTRByGenderByAge(getRawCampaign()),cat_cols=['GENDER','AGE_RANGE'],value_cols='CTR',title='CTR (%) by Age Group & Gender')
-    # with colL:
-    #     getChartCTRByDevice(getCTRByDevice(getRawCampaign()))
     
-    # colAd1,colAd2,colTable=st.columns([1,1,3])   
-    # with colAd1: 
-    #     getChartTopAds(getTopBottomAds(getRawCampaign()))    
-    # with colAd2: 
-    #     getChartTopAds(getTopBottomAds(getRawCampaign(),bottom=True),asc=False,prefix='Bottom')    
-    # with colTable:
-    #     getTableCampaignPerf(getKPIByCampaignAds(getRawCampaign()))       

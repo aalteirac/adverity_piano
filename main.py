@@ -66,9 +66,9 @@ def getBroadband():
 def getViewsByCity():
     queryAll=f'''
     select count(distinct av_session_id) as cnt, adverity.adverity.campaign() as CAMPAIGN, geo_country, geo_city,geo_latitude as lat,geo_longitude as lon    
-    FROM ATIDEMO.stream.events
+    FROM ATINTERNET_ATINTERNET_WAYE.data.events
     Where av_session_id is not null and av_show is not null and
-        to_date(EVENT_TIME) BETWEEN '2022-10-02' AND '2023-02-25'
+        to_date(EVENT_TIME) BETWEEN to_date('2022-10-02') AND to_date('2023-02-01')
     group by geo_country, geo_city,geo_latitude,geo_longitude
     '''
     df = pd.read_sql(queryAll, session)
@@ -85,7 +85,7 @@ def cachedKpis(worldwide):
     return df
 
 def getWorldwideKPI(worldwide):
-    st.subheader("Wordlwide High Speed Broadband Metrics (Marketplace)")
+    st.subheader("Wordlwide High Speed Broadband Metrics")
     cols=st.columns(len(metrics))
     for index,c in enumerate(cols):
         row=cachedKpis(worldwide).iloc[[index]]
@@ -221,14 +221,14 @@ def getPage(sess):
                                                 'Argentina',
                                                 map['geo_country'])             
         map['cnt'] = np.where((map['geo_country'] == 'Argentina') ,
-                                                map['cnt'] *500,
+                                                map['cnt'] *750,
                                                 map['cnt'])                                          
         map['cnt'] = np.where((map['geo_country'] == 'Mexico'),
-                                                map['cnt'] *700,
+                                                map['cnt'] *3000,
                                                 map['cnt']) 
     except:
         print('Empty')              
-    st.subheader("Trailers Views Buffering Rate (Piano)")
+    st.subheader("Trailers Views Buffering Rate")
 
     col0,col1=st.columns(2)
     with col1:
@@ -245,6 +245,6 @@ def getPage(sess):
     with col0:
         # blur=st.slider('blur',1,100,13)
         # rad=st.slider('radius',1,100,14)
-        getMap(map,15,20)    
+        getMap(map,16,20)    
 
  
