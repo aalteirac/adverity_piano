@@ -177,6 +177,9 @@ def getEuroRendererCPCV():
 def customAggCPV():
     rd=JsCode('''
     function(params) {
+                if (params.node.data){
+                    return params.node.data.COSTS/params.node.data.VIEWS;
+                }
                 return params.node.aggData.COSTS/params.node.aggData.VIEWS;
             }
     ''')
@@ -185,6 +188,9 @@ def customAggCPV():
 def customAggCPCV():
     rd=JsCode('''
     function(params) {
+                if (params.node.data){
+                    return params.node.data.COSTS/params.node.data.VIDEO_COMPLETIONS;
+                }
                 return params.node.aggData.COSTS/params.node.aggData.VIDEO_COMPLETIONS;
             }
     ''')
@@ -192,9 +198,10 @@ def customAggCPCV():
 
 def getTableCountryPerf(df):
     ob = GridOptionsBuilder.from_dataframe(df)
-    ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
+    ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True,sortable=True,showRowGroup= 'country', cellRenderer= 'agGroupCellRenderer')
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
+    ob.configure_column('AD_NAME',rowGroup=True,hide= True)
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentRenderer())
     ob.configure_column('VIEWS', aggFunc='sum', header_name='VIDEO VIEWS')
     ob.configure_column('COSTS', aggFunc='sum', header_name='COSTS',hide= True)
@@ -203,6 +210,9 @@ def getTableCountryPerf(df):
     ob.configure_column('VIDEO_COMPLETIONS', aggFunc='sum', header_name='VIDEO COMPLETIONS')    
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
+        ".ag-row-level-3 .ag-group-expanded, .ag-row-level-3 .ag-group-contracted":{
+            "display":"none!important",
+        },
         ".ag-watermark":{
             "display":"none!important"
         },
@@ -216,9 +226,11 @@ def getTableCountryPerf(df):
     gripOption=ob.build()
     gripOption["autoGroupColumnDef"]= {
     "headerName": 'COUNTRY/CAMPAIGN/AD_TYPE',
+    # "cellRendererSelector":getRenderLeaf(),
     "cellRendererParams": {
-      "suppressCount": True,
-        },
+        "suppressDoubleClickExpand": True,  
+        "suppressCount": True,
+    },
     }
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
 
@@ -227,9 +239,15 @@ def divide_two_cols(df_sub):
     return df_sub
 
 def getKPIByCountry(df):
+    df=df.groupby(['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE', 'AD_NAME']).agg({
+                            'VIDEO_COMPLETIONS':'sum',
+                            'VIEWS':'sum',
+                            'COSTS':'sum',
+                            'CTR':"mean",
+                            }).reset_index()
     df['CPVMANUAL']=0
     df['CPCVMANUAL']=0
-    df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE', 'CTR', 'VIEWS','COSTS','CPVMANUAL','VIDEO_COMPLETIONS','CPCVMANUAL']].sort_values(['COUNTRY_NAME'])
+    df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE', 'AD_NAME','CTR', 'VIEWS','COSTS','CPVMANUAL','VIDEO_COMPLETIONS','CPCVMANUAL']].sort_values(['COUNTRY_NAME'])
     return df
 
 def getPage(sess):

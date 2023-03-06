@@ -139,7 +139,7 @@ def getTableCountryPerf(df):
     ob.configure_column('COUNTRY_NAME', rowGroup=True,hide= True)
     ob.configure_column('CAMPAIGN', rowGroup=True,hide= True)
     ob.configure_column('AD_TYPE', rowGroup=True,hide= True)
-    ob.configure_column('AD_NAME', rowGroup=True,hide= True,columnGroupShow='open')
+    ob.configure_column('AD_NAME', rowGroup=True,hide= True)
     ob.configure_column('CTR', aggFunc='avg',header_name='CTR(%)',cellRenderer= getPercentCTRRenderer())
     ob.configure_column('VIEWS', aggFunc='sum')
     ob.configure_column('25% VIEWED', aggFunc='avg',header_name='DROP OFF 25%',cellRenderer= getPercentRenderer())
@@ -149,6 +149,9 @@ def getTableCountryPerf(df):
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
+        ".ag-row-level-3 .ag-group-expanded, .ag-row-level-3 .ag-group-contracted":{
+            "display":"none!important",
+        },
         ".ag-watermark":{
             "display":"none!important"
         },
@@ -163,8 +166,9 @@ def getTableCountryPerf(df):
     gripOption["autoGroupColumnDef"]= {
     "headerName": 'COUNTRY/CAMPAIGN/AD_TYPE',
     "cellRendererParams": {
-      "suppressCount": True,
-        },
+        "suppressDoubleClickExpand": True,  
+        "suppressCount": True,
+    },
     }
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=442,custom_css=custom_css,allow_unsafe_jscode=True,)
 

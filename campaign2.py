@@ -23,6 +23,14 @@ def getCTRByGenderByAge(df):
     return df.groupby(['GENDER','AGE_RANGE']).agg({'CTR':'mean'}).reset_index()
 
 def getKPIByCampaignAds(df):
+    df=df.groupby(['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE', 'AD_NAME']).agg({
+                        'VIDEO_COMPLETIONS':'sum',
+                        'VIEWS':'sum',
+                        'COSTS':'sum',
+                        'CTR':"mean",
+                        'IMPRESSIONS':"sum",
+                        'CLICKS':"sum"
+                        }).reset_index()
     df['CPVMANUAL']=0
     df['CPCVMANUAL']=0
     return df[['CAMPAIGN','AD_TYPE','AD_NAME','IMPRESSIONS', 'CLICKS','CTR','CPVMANUAL','CPCVMANUAL','COSTS','VIDEO_COMPLETIONS','VIEWS']].sort_values(['CAMPAIGN'])
@@ -155,6 +163,9 @@ def getEuroRendererCPV():
 def customAggCPV():
     rd=JsCode('''
     function(params) {
+                if (params.node.data){
+                    return params.node.data.COSTS/params.node.data.VIEWS;
+                }
                 return params.node.aggData.COSTS/params.node.aggData.VIEWS;
             }
     ''')
@@ -163,6 +174,9 @@ def customAggCPV():
 def customAggCPCV():
     rd=JsCode('''
     function(params) {
+                if (params.node.data){
+                    return params.node.data.COSTS/params.node.data.VIDEO_COMPLETIONS;
+                }
                 return params.node.aggData.COSTS/params.node.aggData.VIDEO_COMPLETIONS;
             }
     ''')
@@ -184,6 +198,9 @@ def getTableCampaignPerf(df):
     
     ob.configure_grid_options(suppressAggFuncInHeader = True)
     custom_css = {
+        ".ag-row-level-2 .ag-group-expanded, .ag-row-level-2 .ag-group-contracted":{
+            "display":"none!important",
+        },
         ".ag-watermark":{
             "display":"none!important"
         },
@@ -198,8 +215,9 @@ def getTableCampaignPerf(df):
     gripOption["autoGroupColumnDef"]= {
     "headerName": 'CAMPAIGN/AD_TYPE',
     "cellRendererParams": {
-      "suppressCount": True,
-        },
+        "suppressDoubleClickExpand": True,  
+        "suppressCount": True,
+    },
     }
     AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True)
 

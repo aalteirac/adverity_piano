@@ -21,8 +21,8 @@ def setUI():
                 }
                 }
             function hide(){
-                window.parent.document.querySelector(".main").scrollTop = 0;
-                window.parent.document.querySelector(".main").style.overflow="hidden";
+               // window.parent.document.querySelector(".main").scrollTop = 0;
+                //window.parent.document.querySelector(".main").style.overflow="hidden";
                
             }
             window.parent.document.addEventListener("DOMNodeInserted", 
@@ -33,8 +33,8 @@ def setUI():
                     //}    
                     tm=setTimeout(()=>{
                             clearTimeout(tm)
-                            window.parent.document.querySelector(".main").style.overflow="auto";
-                            window.parent.document.querySelector(".main").scrollTop = 0;
+                            //window.parent.document.querySelector(".main").style.overflow="auto";
+                            //window.parent.document.querySelector(".main").scrollTop = 0;
                             setTimeout(()=>{
                                 toHide=window.parent.document.querySelectorAll('iframe[height="0"]')
                                 for (const iframe of toHide) {
