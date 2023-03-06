@@ -185,7 +185,7 @@ def getMap(map,b,r):
         radius=r,
         blur=b
     )
-    m.to_streamlit(height=487,)
+    m.to_streamlit(height=484,)
 
 def getPage(sess):
     global session
