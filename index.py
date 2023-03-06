@@ -6,11 +6,21 @@ import snowflake.connector as sf
 import streamlit as st
 import hydralit_components as hc
 import time
+import configparser
+
+
 
 
 @st.cache_resource(ttl=5000)
 def getSession():
-    session = sf.connect(**st.secrets.snow)
+    try:
+        config = configparser.ConfigParser()
+        config.read("secrets.toml")
+        print(dict(config.items("snow")))
+        session=sf.connect(**dict(config.items("snow")))
+        
+    except :
+        session = sf.connect(**st.secrets.snow)
     return session
 
 page = option_menu("Piano-Adverity-Snowflake", ["Home","Country Performance", "Campaigns Overview","Video Deep Dive","Ads Performance","'What If' Estimation"],
