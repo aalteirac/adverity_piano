@@ -123,7 +123,7 @@ def getChartVideoByCampaign(df):
         # paper_bgcolor="LightSteelBlue",
     )
     fig.update_traces(texttemplate='%{text:.2%}', textposition='inside')
-    fig.update_layout(yaxis_range=[df['VIDEO_COMPLETIONS'].min() - (df['VIDEO_COMPLETIONS'].min()/40),df['VIDEO_COMPLETIONS'].max()]) #yaxis_range=[1.2,1.25]
+    fig.update_layout(yaxis_range=[df['VIDEO_COMPLETIONS'].min() - (df['VIDEO_COMPLETIONS'].min()/20),df['VIDEO_COMPLETIONS'].max()]) #yaxis_range=[1.2,1.25]
     st.plotly_chart(fig,config=config, theme="streamlit",use_container_width=True)
 
 def getPercentRenderer():

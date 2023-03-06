@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 import snowflake.connector as sf
 import streamlit as st
 import hydralit_components as hc
-import time
+import gc
 import configparser
 
 
@@ -39,7 +39,7 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home","Country Performance", "C
                    )
 
 emp=st.empty()
-
+gc.collect()
 setUI()
 emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
 if page == 'Home':
