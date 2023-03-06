@@ -34,7 +34,7 @@ def getCard(text,val,icon, compare=False):
     else:
         return hc.info_card(key=key,title=val, title_text_size="13vw",content=str(text),content_text_size="10vw",icon_size=icoSize,theme_override=style,bar_value=100)    
 
-@st.cache_data(show_spinner=False,ttl=1000)
+@st.cache_data(show_spinner=False,ttl=5000)
 def getRawCampaign():
     queryAll=f'''
     SELECT *,to_date(TO_VARCHAR(DAY, 'yyyy-MM-01')) as MONTH,coalesce((clicks/NULLIF(impressions,0))*100,0) as CTR,coalesce(((clicks + likes + shares)/NULLIF(impressions,0))*100,0) as ER from adverity.adverity."Marketing_Data";

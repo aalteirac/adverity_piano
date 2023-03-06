@@ -25,7 +25,7 @@ def alpha3code(column):
                 CODE.append('VEN')    
     return CODE
 
-@st.cache_data(show_spinner=False,ttl=1000)
+@st.cache_data(show_spinner=False,ttl=5000)
 def getRawCampaign():
     queryAll=f'''
     SELECT *,to_date(TO_VARCHAR(DAY, 'yyyy-MM-01')) as MONTH,coalesce((clicks/NULLIF(impressions,0))*100,0) as CTR,coalesce(((clicks + likes + shares)/NULLIF(impressions,0))*100,0) as ER from adverity.adverity."Marketing_Data";
