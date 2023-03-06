@@ -5,7 +5,7 @@ import string
 import random
 import hydralit_components as hc
 from math import log, floor
-from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
 
 
 session=None
@@ -232,7 +232,7 @@ def getTableCountryPerf(df):
         "suppressCount": True,
     },
     }
-    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True,)
+    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=342,custom_css=custom_css,allow_unsafe_jscode=True, update_mode=GridUpdateMode.NO_UPDATE )
 
 def divide_two_cols(df_sub):
     df_sub['CPVMANUAL']=df_sub['COSTS'].sum() / df_sub['VIEWS'].sum()

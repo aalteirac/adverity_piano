@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
 import pycountry
 import geopandas
 import leafmap.foliumap as leafmap
@@ -170,7 +170,7 @@ def getTableCountryPerf(df):
         "suppressCount": True,
     },
     }
-    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=442,custom_css=custom_css,allow_unsafe_jscode=True,)
+    AgGrid(df, gripOption, enable_enterprise_modules=True,fit_columns_on_grid_load=True,height=442,custom_css=custom_css,allow_unsafe_jscode=True, update_mode=GridUpdateMode.NO_UPDATE )
 
 def getPage(sess):
     global session 

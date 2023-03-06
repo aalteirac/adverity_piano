@@ -21,7 +21,7 @@ def setUI():
                 }
                 }
             function hide(){
-               // window.parent.document.querySelector(".main").scrollTop = 0;
+                //window.parent.document.querySelector(".main").scrollTop = 0;
                 //window.parent.document.querySelector(".main").style.overflow="hidden";
                
             }
