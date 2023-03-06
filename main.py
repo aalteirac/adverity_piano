@@ -62,7 +62,7 @@ def getBroadband():
     df = pd.read_sql(queryAll, session)
     return df
 
-@st.cache_data(ttl=5000)
+@st.cache_resource(ttl=5000)
 def getViewsByCity():
     queryAll=f'''
     select count(distinct av_session_id) as cnt, adverity.adverity.campaign() as CAMPAIGN, geo_country, geo_city,geo_latitude as lat,geo_longitude as lon    
@@ -74,7 +74,7 @@ def getViewsByCity():
     df = pd.read_sql(queryAll, session)
     return df
 
-@st.cache_data
+@st.cache_resource
 def cachedKpis(worldwide):
     df = pd.DataFrame(columns=['METRIC', 'LABEL', 'ICON','VALUE'])
     for index,c in enumerate(metrics):
