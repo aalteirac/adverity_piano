@@ -103,7 +103,7 @@ def getPage(sess):
          countries=dt['COUNTRY_NAME'].unique()
          campaings=dt['CAMPAIGN'].unique()    
 
-         
+
     totalcost=getTotalCost(dt)
     totalcostOrig=getTotalCost(orig)
     compared=(1-((totalcost/totalcostOrig)))*100
@@ -113,7 +113,6 @@ def getPage(sess):
         getCard('SAVING: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True)  
         st.slider('Cluster Number',2,10,value=5,key='clusNum')
         clus=st.empty()
-        st.button('Reset',on_click=reset())
        
        
     with colR:
