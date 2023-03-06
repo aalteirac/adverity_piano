@@ -1,4 +1,4 @@
-streamlit==latest
+streamlit
 plotly
 streamlit-option-menu
 snowflake-connector-python
