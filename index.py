@@ -8,7 +8,7 @@ import hydralit_components as hc
 import time
 
 
-@st.cache_resource(ttl=2500)
+@st.cache_resource(ttl=5000)
 def getSession():
     session = sf.connect(**st.secrets.snow)
     return session
