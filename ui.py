@@ -87,7 +87,7 @@ def setUI():
                 .stMarkdown p {
                     animation: rotating 2s linear infinite;
                 }
-                iframe{
+                iframeOUT{
                     transform-origin: 50% 0;
 	                animation: append-animate 1.4s linear;
                 }
