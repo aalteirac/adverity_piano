@@ -89,22 +89,26 @@ def getPage(sess):
         getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart') 
 
     colCt,colCg= st.columns(2)
-    uniqueCountries=np.sort( np.insert(rawcampDF['COUNTRY_NAME'].unique(),0,['ALL']) )
-    uniqueCampaigns=np.insert(rawcampDF['CAMPAIGN'].unique(),0,['ALL'])
-    countryFilter=colCt.selectbox("Select Country:", uniqueCountries)
-    campaignFilter=colCg.selectbox("Select Campaign:", uniqueCampaigns)
-    if countryFilter!='ALL':
-        rawcampDF=rawcampDF[(rawcampDF['COUNTRY_NAME'] == countryFilter)]
-    if campaignFilter!='ALL':
-        rawcampDF=rawcampDF[(rawcampDF['CAMPAIGN'] == campaignFilter)]    
-    col1, col2,col3,col4 = st.columns(4)
-    with col1:
-        getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
-    with col2:
-        getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
-    with col3:
-        getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
-    with col4:
-        getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart')
+
+    uniqueCountries=np.sort(rawcampDF['COUNTRY_NAME'].unique())
+    uniqueCampaigns=rawcampDF['CAMPAIGN'].unique()
+    countryFilter=colCt.multiselect("Select Country:", uniqueCountries,default=[])
+    campaignFilter=colCg.multiselect("Select Campaign:", uniqueCampaigns,default=[])
+    if len(countryFilter)!=0:
+        rawcampDF=rawcampDF[rawcampDF['COUNTRY_NAME'].isin(countryFilter)]
+    if len(campaignFilter)!=0:
+        rawcampDF=rawcampDF[rawcampDF['CAMPAIGN'].isin(campaignFilter)]    
+
+    if len(countryFilter)!=0 or len(campaignFilter)!=0: 
+        col1, col2,col3,col4 = st.columns(4)
+        with col1:
+            getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
+        with col2:
+            getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
+        with col3:
+            getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
+        with col4:
+            getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart')
+
     getChartClickCTR(getKPIByMonth(rawcampDF))
  
