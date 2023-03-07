@@ -102,8 +102,8 @@ def setUI():
                 }
                 .main .block-container{
                     max-width: unset;
-                    padding-left: 5em;
-                    padding-right: 5em;
+                    padding-left:1em;
+                    padding-right: 1em;
                     padding-top: 0em;
                     padding-bottom: 1em;
                     }
