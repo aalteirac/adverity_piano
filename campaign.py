@@ -78,6 +78,16 @@ def getPage(sess):
     global session 
     session = sess
     rawcampDF=getRawCampaign()
+    col1, col2,col3,col4 = st.columns(4)
+    with col1:
+        getCard("GLOBAL IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
+    with col2:
+        getCard("GLOBAL CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
+    with col3:
+        getCard("GLOBAL CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
+    with col4:
+        getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart') 
+
     colCt,colCg= st.columns(2)
     uniqueCountries=np.sort( np.insert(rawcampDF['COUNTRY_NAME'].unique(),0,['ALL']) )
     uniqueCampaigns=np.insert(rawcampDF['CAMPAIGN'].unique(),0,['ALL'])
@@ -87,16 +97,6 @@ def getPage(sess):
         rawcampDF=rawcampDF[(rawcampDF['COUNTRY_NAME'] == countryFilter)]
     if campaignFilter!='ALL':
         rawcampDF=rawcampDF[(rawcampDF['CAMPAIGN'] == campaignFilter)]    
-    # st.write(getGlobalKPI( getRawCampaign(),'IMPRESSIONS','sum'))
-    # st.write(getGlobalKPI( getRawCampaign(),'CLICKS','sum'))
-    # st.write(getGlobalKPI( getRawCampaign(),'CTR','mean'))
-    # st.write(getCTRByDevice(getRawCampaign()))
-    # st.write(getTopBottomAds(getRawCampaign()))
-    # st.write(getTopBottomAds(getRawCampaign(),True))
-    # st.write(getKPIByCampaignAds(getRawCampaign()))
-    # st.write(getVideoFunnel(getRawCampaign()))
-    # st.write(getVideoKPI(getRawCampaign()))
-    # st.write(getVideoCompletionDrillDown(getRawCampaign()))
     col1, col2,col3,col4 = st.columns(4)
     with col1:
         getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')

@@ -100,7 +100,7 @@ def getKPIByCountry(df):
     df['50% VIEWED']=(1-(df['VIDEO_QUARTILE_50_VIEWS']/df['VIEWS']))*100
     df['75% VIEWED']=(1-(df['VIDEO_QUARTILE_75_VIEWS']/df['VIEWS']))*100
     df['VIDEO_COMPLETION_RATE']=df['VIDEO_COMPLETION_RATE']*100
-    df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE','AD_NAME', 'CTR', 'VIEWS','VIDEO_COMPLETION_RATE','25% VIEWED','50% VIEWED','75% VIEWED']].sort_values(['COUNTRY_NAME'])
+    df= df[['COUNTRY_NAME', 'CAMPAIGN','AD_TYPE','AD_NAME', 'CTR', 'VIEWS','25% VIEWED','50% VIEWED','75% VIEWED','VIDEO_COMPLETION_RATE']].sort_values(['COUNTRY_NAME'])
     return df
 
 def getPercentRenderer():
