@@ -123,7 +123,7 @@ def getPage(sess):
         with colL: 
             st.slider('Cluster Number',2,10,value=5,key='clusNum')
         with colR:
-            st.multiselect('Exclude Cluster (Preempts All Other Exclusions):',np.unique(kmeans.labels_),key='clusterstore')
+            st.multiselect('Exclude Cluster:',np.unique(kmeans.labels_),key='clusterstore')
         if clusterSelected is not None and  len(clusterSelected)>0:     
             fig = px.scatter(
                 clusterDF,
