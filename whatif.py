@@ -68,7 +68,7 @@ def getPage(sess):
     dt=getRawCampaign()
     orig=dt.copy()
     dt2=orig.copy()
-    tab1, tab2 = st.tabs(["Manual", "Assisted"])
+    tab1, tab2 = st.tabs(["Assisted", "Manual"])
 
     with tab2:
         countries=st.session_state.get('country') 
