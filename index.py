@@ -38,6 +38,8 @@ page = option_menu("Piano-Adverity-Snowflake", ["Home","Country Performance", "C
                    }
                    )
 
+
+
 emp=st.empty()
 gc.collect()
 setUI()
@@ -55,6 +57,8 @@ if page == 'Country Performance':
 if page == "Budget Allocation":
     whatif.getPage(getSession())          
 emp.empty()
+
+
 # menu_data = [
 #     {'id':'Home','icon':"🐙",'label':"Home"},
 #     {'id':'Campaigns','icon': "💀", 'label':"Campaigns"},
