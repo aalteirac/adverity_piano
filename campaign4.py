@@ -89,8 +89,10 @@ def getMapConversion(df,metric):
     #         folium.CircleMarker(location = [lat, long], radius=radius, popup= popup_text, fill =True).add_to(marker_cluster)
 
 def getVideoForMap(df):
-    df=df[['COUNTRY_NAME','VIDEO_COMPLETION_RATE', 'CONVERSIONS']]
-    df=df.groupby(['COUNTRY_NAME']).agg({'VIDEO_COMPLETION_RATE':'mean','CONVERSIONS':'sum'}).reset_index()
+    df=df[['COUNTRY_NAME','VIDEO_COMPLETION_RATE', 'CTR']]
+    df=df.groupby(['COUNTRY_NAME']).agg({'VIDEO_COMPLETION_RATE':'mean','CTR':'mean'}).reset_index()
+    df['CTR']=round(df['CTR'],2)
+    df['VIDEO_COMPLETION_RATE']=round(df['VIDEO_COMPLETION_RATE']*100,2)
     df['CODE']=alpha3code(df.COUNTRY_NAME)
     df=getGeoFromIso(df)
     return df
@@ -187,7 +189,7 @@ def getPage(sess):
         rawcampDF=rawcampDF[(rawcampDF['CAMPAIGN'] == campaignFilter)]    
     colMap1,colMap2=st.columns(2)
     with colMap1:
-        getMapConversion(getVideoForMap(rawcampDF),'CONVERSIONS') 
+        getMapConversion(getVideoForMap(rawcampDF),'CTR') 
     with colMap2:
         getMapConversion(getVideoForMap(rawcampDF),'VIDEO_COMPLETION_RATE')     
     getTableCountryPerf(getKPIByCountry(rawcampDF))
