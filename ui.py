@@ -43,12 +43,16 @@ def setUI():
                 .block-container:has(.big-font){
                     overflow:hidden;
                 } 
+                div[data-testid="stVerticalBlock"] {
+                    gap:0rem;
+                }
                 .stMarkdown div:has(.big-font){
                     position: absolute;
                     z-index: 5;
                     width: 100%;
                     height: 4000px;
                     background-color: white;
+                    opacity: 0.8;
                 }
                 .stMarkdown {
                     z-index:1000;
@@ -63,7 +67,7 @@ def setUI():
                 .big-font {
                     font-size:35vw !important;
                     color:"darkgrey";
-                    opacity:0.05;
+                    opacity: 0.1;
                     text-align:center;
                 }
                 .streamlit-expanderHeader p{
