@@ -24,9 +24,7 @@ def formatBigNumber(number):
     magnitude = int(floor(log(number, k)))
     return '%.2f%s' % (number / k**magnitude, units[magnitude])
 
-def getCard(text,val,icon, compare=False):
-    letters = string.ascii_lowercase
-    key = ''.join(random.choice(letters) for i in range(8))
+def getCard(text,val,icon, key,compare=False):
     pgcol='green'
     if '-' in text:
         pgcol='red'
@@ -265,14 +263,14 @@ def getPage(sess):
     with colMain2:    
         col1,col2,col3,col4,col5=st.columns(5)
         with col1:
-            getCard("TOTAL VIEWED",str(formatBigNumber(vws)), "fa fa-video")
+            getCard("TOTAL VIEWED",str(formatBigNumber(vws)), "fa fa-video",key='one')
         with col2:
-            getCard("25% VIEWED",str(formatBigNumber(vws25)), "")
+            getCard("25% VIEWED",str(formatBigNumber(vws25)), "",key='two')
         with col3:
-            getCard("50% VIEWED",str(formatBigNumber(vws50)), "")
+            getCard("50% VIEWED",str(formatBigNumber(vws50)), "",key='three')
         with col4:
-            getCard("75% VIEWED",str(formatBigNumber(vws75)), "")
+            getCard("75% VIEWED",str(formatBigNumber(vws75)), "",key='four')
         with col5:
-            getCard("COMPLETE VIEW",str(formatBigNumber(vwsComp)), "fa fa-film")                
+            getCard("COMPLETE VIEW",str(formatBigNumber(vwsComp)), "fa fa-film",key='five')                
         getChartVideoByCampaign(getVideoCompletionDrillDown(getRawCampaign()))
     getTableCountryPerf(getKPIByCountry(getRawCampaign()))

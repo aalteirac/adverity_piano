@@ -30,7 +30,7 @@ page = option_menu("Adverity-Piano-Snowflake-MarketPlace", ["Home","Country Perf
                        "container": {"max-width": "100%!important","--primary-color":"#4a4d4f","--text-color":"#30333f"},
                        "nav-link": {"font-weight": "600"},
                        "menu-title" :{"font-weight": "600"},
-                       "nav-link": {"font-size": "1vw","font-weight": "600"}
+                       "nav-link": {"font-size": "1.1vw","font-weight": "600"}
                        # "margin":"0px", "--hover-color": "#eee"}
                        # "container": {"padding": "0!important", "background-color": "#fafafa"}, "icon": {"color":
                        # "orange", "font-size": "25px"}, "nav-link": {"font-size": "25px", "text-align": "left",
@@ -40,10 +40,10 @@ page = option_menu("Adverity-Piano-Snowflake-MarketPlace", ["Home","Country Perf
 
 
 
-emp=st.empty()
+# emp=st.empty()
 gc.collect()
 setUI()
-emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
+# emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
@@ -56,7 +56,7 @@ if page == 'Country Performance':
     campaign4.getPage(getSession())     
 if page == "Budget Allocation":
     whatif.getPage(getSession())          
-emp.empty()
+# emp.empty()
 
 
 # menu_data = [

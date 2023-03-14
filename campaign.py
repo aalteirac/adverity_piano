@@ -28,9 +28,9 @@ def alpha3code(column):
                 CODE.append('VEN')    
     return CODE
 
-def getCard(text,val,icon, compare=False):
-    letters = string.ascii_lowercase
-    key = ''.join(random.choice(letters) for i in range(8))
+def getCard(text,val,icon, key,compare=False):
+    # letters = string.ascii_lowercase
+    # key = ''.join(random.choice(letters) for i in range(8))
     pgcol='green'
     if '-' in text:
         pgcol='red'
@@ -80,13 +80,13 @@ def getPage(sess):
     rawcampDF=getRawCampaign()
     col1, col2,col3,col4 = st.columns(4)
     with col1:
-        getCard("GLOBAL IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
+        getCard("GLOBAL IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='one')
     with col2:
-        getCard("GLOBAL CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
+        getCard("GLOBAL CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='two')
     with col3:
-        getCard("GLOBAL CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
+        getCard("GLOBAL CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='three')
     with col4:
-        getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart') 
+        getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='four') 
 
     colCt,colCg= st.columns(2)
 
@@ -102,13 +102,13 @@ def getPage(sess):
     if len(countryFilter)!=0 or len(campaignFilter)!=0: 
         col1, col2,col3,col4 = st.columns(4)
         with col1:
-            getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print')
+            getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='five')
         with col2:
-            getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer')
+            getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='six')
         with col3:
-            getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill')
+            getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='seven')
         with col4:
-            getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart')
+            getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='height')
 
     getChartClickCTR(getKPIByMonth(rawcampDF))
  

@@ -37,9 +37,9 @@ metricsIcons=['fa fa-mobile',
         'fa fa-wifi'
         ]   
 
-def getCard(text,val,icon, compare=False,titleTextSize="16vw",content_text_size="10vw"):
-    letters = string.ascii_lowercase
-    key = ''.join(random.choice(letters) for i in range(8))
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw"):
+    # letters = string.ascii_lowercase
+    # key = ''.join("A_" for i in range(8))
     pgcol='green'
     if '-' in text:
         pgcol='red'
@@ -93,8 +93,8 @@ def getWorldwideKPI(worldwide):
         if 'Gb' in row['LABEL'].iloc[0]:
             unit="Gb"
         with c:
-            time.sleep(0.3)    
-            getCard(row['LABEL'].iloc[0],str(round(row['VALUE'].iloc[0],2)) + unit, row['ICON'].iloc[0])
+            # time.sleep(0.3)    
+            getCard(row['LABEL'].iloc[0],str(round(row['VALUE'].iloc[0],2)) + unit, row['ICON'].iloc[0],key="CW_"+str(index))
 
 def getCountrySelectionBox(raw):
     return st.selectbox(
@@ -121,9 +121,11 @@ def getCountryKPI(country,raw,worldwide):
                     unit="%"
                     if 'Gb' in metrics[index]:
                         unit="Gb"
-                    getCard(str(evol)+'%',str(round(fbnb,2)) + unit, metricsIcons[index],True)
-                except:
-                    getCard('Not deployed',0, metricsIcons[index])
+                    print("CK_"+str(index))    
+                    getCard(text=str(evol)+'%',val= str(round(fbnb,2)) + unit, icon=metricsIcons[index],compare=True,key="CK_"+str(index))
+                except Exception as e:
+                    print(e)
+                    getCard(text='Not deployed',val=0, icon=metricsIcons[index],key="CK_"+str(index))
 
 def getMap2(map):   
     st.pydeck_chart(pdk.Deck(
@@ -238,7 +240,7 @@ def getPage(sess):
         # colnested1,colnested2=st.columns(2)
         if cpgd is not None: 
             # with colnested1:
-            getCard(cpgd,'High Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw')
+            getCard(cpgd,'High Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw',key="BUFF_1")
         # if cpgd is not None: 
         #     with colnested2:
         #         getCard(cpgl,'Low Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')    

@@ -19,9 +19,7 @@ def formatBigNumber(number):
     return '%.3f%s' % (number / k**magnitude, units[magnitude])
 
 
-def getCard(text,val,icon, compare=False):
-    letters = string.ascii_lowercase
-    key = ''.join(random.choice(letters) for i in range(8))
+def getCard(text,val,icon,key, compare=False):
     pgcol='green'
     if '-' in text:
         pgcol='red'
@@ -85,9 +83,9 @@ def getPage(sess):
         st.subheader("Estimate Saving by Manually Canceling Campaigns in Countries"  )
         colL,colR=st.columns(2)
         with colL:
-            getCard("ORIGINAL COST",formatBigNumber(totalcostOrig),'fa fa-money-bill',True)  
+            getCard(text="ORIGINAL COST",val=formatBigNumber(totalcostOrig),icon='fa fa-money-bill',compare=True,key='zero')  
         with colR:
-            getCard('SAVING: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True) 
+            getCard(text='SAVING: '+ str(round(compared,2))+'%',val=formatBigNumber(totalcostOrig - totalcost), icon='fa fa-piggy-bank',compare=True,key='minusone') 
         getCountrySelectionBox(orig,dt) 
         getCampaignSelectionBox(orig,dt)   
 
@@ -116,9 +114,9 @@ def getPage(sess):
         st.subheader("Estimate Saving by Scientifically Canceling Campaigns in Countries"  )
         colL,colR=st.columns(2)
         with colL:
-            getCard("ORIGINAL COST",formatBigNumber(totalcostOrig),'fa fa-money-bill',True)  
+            getCard(text="ORIGINAL COST",val=formatBigNumber(totalcostOrig),icon='fa fa-money-bill',compare= True,key='one')  
         with colR:
-            getCard('SAVING: '+ str(round(compared,2))+'%',formatBigNumber(totalcostOrig - totalcost), 'fa fa-piggy-bank',True) 
+            getCard(text='SAVING: '+ str(round(compared,2))+'%',val=formatBigNumber(totalcostOrig - totalcost), icon='fa fa-piggy-bank',compare= True,key='two') 
         colL,colR=st.columns(2)   
         with colL: 
             st.slider('Cluster Number',2,10,value=5,key='clusNum')
