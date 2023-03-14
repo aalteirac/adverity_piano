@@ -4,48 +4,7 @@ import streamlit.components.v1 as components
 def setUI():
     hvar='''
         <script>
-            function debounce(func, wait, immediate) {
-                var timeout;
-                return function() {
-                    var context = this,
-                    args = arguments;
-                    var callNow = immediate && !timeout;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(function() {
-                    timeout = null;
-                    if (!immediate) {
-                        func.apply(context, args);
-                    }
-                    }, wait);
-                    if (callNow) func.apply(context, args);
-                }
-                }
-            function hide(){
-                //window.parent.document.querySelector(".main").scrollTop = 0;
-                //window.parent.document.querySelector(".main").style.overflow="hidden";
-               
-            }
-            window.parent.document.addEventListener("DOMNodeInserted", 
-                debounce((e) => {
-                    //if (e.target && e.target.classList && (e.target.classList.contains("element-container") || e.target.classList.contains("stHorizontalBlock") ) ){
-                        hide();
-                        //console.log('TEST')
-                    //}    
-                    tm=setTimeout(()=>{
-                            clearTimeout(tm)
-                            //window.parent.document.querySelector(".main").style.overflow="auto";
-                            //window.parent.document.querySelector(".main").scrollTop = 0;
-                            setTimeout(()=>{
-                                toHide=window.parent.document.querySelectorAll('iframe[height="0"]')
-                                for (const iframe of toHide) {
-                                    if(iframe.hasAttribute("srcdoc"))
-                                        iframe.parentElement.style.display="none"
-                                }
-                            },1000)
-                        }
-                    ,3000)
-                },1000,true)
-                , true);   
+              
 
             setTimeout(()=>{
                 toHide=window.parent.document.querySelectorAll('iframe[height="0"]')
@@ -80,6 +39,16 @@ def setUI():
                     to {
                         transform: rotate(360deg);
                     }
+                }
+                .block-container:has(.big-font){
+                    overflow:hidden;
+                } 
+                .stMarkdown div:has(.big-font){
+                    position: absolute;
+                    z-index: 5;
+                    width: 100%;
+                    height: 4000px;
+                    background-color: white;
                 }
                 .stMarkdown {
                     z-index:1000;
