@@ -41,7 +41,7 @@ def setUI():
                     }
                 }
                 .block-container:has(.big-font){
-                    overflow:hidden;
+                    /* overflow:hidden; */
                 } 
                 div[data-testid="stVerticalBlock"] {
                     gap:0rem;
