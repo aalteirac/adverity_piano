@@ -40,10 +40,10 @@ page = option_menu("Adverity-Piano-Snowflake-MarketPlace", ["Home","Country Perf
 
 
 
-# emp=st.empty()
+emp=st.empty()
 gc.collect()
 setUI()
-# emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
+emp.markdown('<p class="big-font">⏳</p>', unsafe_allow_html=True)
 if page == 'Home':
     main.getPage(getSession())
 if page == 'Campaigns Overview':
@@ -56,7 +56,7 @@ if page == 'Country Performance':
     campaign4.getPage(getSession())     
 if page == "Budget Allocation":
     whatif.getPage(getSession())          
-# emp.empty()
+emp.empty()
 
 
 # menu_data = [
