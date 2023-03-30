@@ -34,7 +34,7 @@ metricsIcons=['fa fa-mobile',
         'fa fa-wifi'
         ]   
 
-def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=70,backgroundColor='#f0f2f6'):
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=90,backgroundColor='#f0f2f6',iconTop=45):
     pgcol='green'
     if isinstance(val, numbers.Number):
         if val<0:
@@ -44,9 +44,9 @@ def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_s
     style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
     icoSize="20vw"
     if compare==False:
-        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,unit=unit,iconLeft=iconLeft,showProgress=False,backgroundColor=backgroundColor)
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,unit=unit,iconLeft=iconLeft,showProgress=False,backgroundColor=backgroundColor,iconTop=iconTop)
     else:
-        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,progressValue=100,unit=unit,iconLeft=iconLeft,showProgress=True,progressColor=pgcol,backgroundColor=backgroundColor)  
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,progressValue=100,unit=unit,iconLeft=iconLeft,showProgress=True,progressColor=pgcol,backgroundColor=backgroundColor,iconTop=iconTop)  
 
 @st.cache_data
 def getBroadband():
