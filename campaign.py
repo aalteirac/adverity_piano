@@ -1,14 +1,11 @@
 import streamlit as st
 import pandas as pd
-import hydralit_components as hc
-import random
-import string
 import plotly.graph_objects as go
-from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
+from st_aggrid import AgGrid
 import pycountry
 import numpy as np
-import leafmap.foliumap as leafmap
-import time
+from streamlit_kpi import streamlit_kpi
+import numbers
 
 
 session=None
@@ -28,17 +25,19 @@ def alpha3code(column):
                 CODE.append('VEN')    
     return CODE
 
-def getCard(text,val,icon, key,compare=False):
-    # letters = string.ascii_lowercase
-    # key = ''.join(random.choice(letters) for i in range(8))
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=80,iconTop=65,backgroundColor='#f0f2f6'):
     pgcol='green'
-    if '-' in text:
-        pgcol='red'
+    if isinstance(val, numbers.Number):
+        if val<0:
+            pgcol='red'
     if compare==False:
         pgcol='darkgrey'
     style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
-    icoSize="15vw"
-    hc.info_card(key=key,title=str(val), title_text_size="12vw",content=str(text),content_text_size="8vw",icon_size=icoSize,theme_override=style)
+    icoSize="20vw"
+    if compare==False:
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,unit=unit,iconLeft=iconLeft,showProgress=False,iconTop=iconTop,backgroundColor=backgroundColor)
+    else:
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,progressValue=100,unit=unit,iconLeft=iconLeft,showProgress=True,progressColor=pgcol,iconTop=iconTop,backgroundColor=backgroundColor)  
 
 @st.cache_data(show_spinner=False,ttl=5000)
 def getRawCampaign():
@@ -80,13 +79,13 @@ def getPage(sess):
     rawcampDF=getRawCampaign()
     col1, col2,col3,col4 = st.columns(4)
     with col1:
-        getCard("GLOBAL IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='one')
+        getCard("GLOBAL IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='one',height="180")
     with col2:
-        getCard("GLOBAL CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='two')
+        getCard("GLOBAL CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='two,',height="180")
     with col3:
-        getCard("GLOBAL CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='three')
+        getCard("GLOBAL CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='three',height="180")
     with col4:
-        getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='four') 
+        getCard("GLOBAL ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='four',height="180") 
 
     colCt,colCg= st.columns(2)
 
@@ -102,13 +101,13 @@ def getPage(sess):
     if len(countryFilter)!=0 or len(campaignFilter)!=0: 
         col1, col2,col3,col4 = st.columns(4)
         with col1:
-            getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='five')
+            getCard("IMPRESSIONS","{:,}".format(getGlobalKPI( rawcampDF,'IMPRESSIONS','sum')),'fa fa-print',key='five',height="180")
         with col2:
-            getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='six')
+            getCard("CLICKS","{:,}".format(getGlobalKPI( rawcampDF,'CLICKS','sum')),'fa fa-hand-pointer',key='six',height="180")
         with col3:
-            getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='seven')
+            getCard("CTR (%)",str(  round(getGlobalKPI( rawcampDF,'CTR','mean'),2)) +"%",'fa fa-money-bill',key='seven',height="180")
         with col4:
-            getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='height')
+            getCard("ER (%)",str(  round(getGlobalKPI( rawcampDF,'ER','mean'),2)) +"%",'fa fa-heart',key='height',height="180")
 
     getChartClickCTR(getKPIByMonth(rawcampDF))
  

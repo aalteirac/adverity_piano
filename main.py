@@ -2,12 +2,9 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import numpy as np
-import hydralit_components as hc
-import snowflake.connector as sf
-import random
-import string
 import leafmap.foliumap as leafmap
-import time
+import numbers
+from streamlit_kpi import streamlit_kpi
 
 session=None
 
@@ -37,20 +34,19 @@ metricsIcons=['fa fa-mobile',
         'fa fa-wifi'
         ]   
 
-def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw"):
-    # letters = string.ascii_lowercase
-    # key = ''.join("A_" for i in range(8))
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=70,backgroundColor='#f0f2f6'):
     pgcol='green'
-    if '-' in text:
-        pgcol='red'
+    if isinstance(val, numbers.Number):
+        if val<0:
+            pgcol='red'
     if compare==False:
         pgcol='darkgrey'
     style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
     icoSize="20vw"
     if compare==False:
-        hc.info_card(key=key,title=val, title_text_size=titleTextSize,content=str(text),content_text_size=content_text_size,icon_size=icoSize,theme_override=style)
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,unit=unit,iconLeft=iconLeft,showProgress=False,backgroundColor=backgroundColor)
     else:
-        hc.info_card(key=key,title=val, title_text_size=titleTextSize,content=str(text),content_text_size=content_text_size,icon_size=icoSize,theme_override=style,bar_value=100)    
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,progressValue=100,unit=unit,iconLeft=iconLeft,showProgress=True,progressColor=pgcol,backgroundColor=backgroundColor)  
 
 @st.cache_data
 def getBroadband():
@@ -94,7 +90,7 @@ def getWorldwideKPI(worldwide):
             unit="Gb"
         with c:
             # time.sleep(0.3)    
-            getCard(row['LABEL'].iloc[0],str(round(row['VALUE'].iloc[0],2)) + unit, row['ICON'].iloc[0],key="CW_"+str(index))
+            getCard(row['LABEL'].iloc[0],round(float(row['VALUE'].iloc[0]),2), icon=row['ICON'].iloc[0],key="CW_"+str(index),unit= unit)
 
 def getCountrySelectionBox(raw):
     return st.selectbox(
@@ -122,7 +118,7 @@ def getCountryKPI(country,raw,worldwide):
                     if 'Gb' in metrics[index]:
                         unit="Gb"
                     print("CK_"+str(index))    
-                    getCard(text=str(evol)+'%',val= str(round(fbnb,2)) + unit, icon=metricsIcons[index],compare=True,key="CK_"+str(index))
+                    getCard(text=str(round(fbnb,2))+unit,val=evol, icon=metricsIcons[index],compare=True,key="CK_"+str(index),unit='%')
                 except Exception as e:
                     print(e)
                     getCard(text='Not deployed',val=0, icon=metricsIcons[index],key="CK_"+str(index))
@@ -240,7 +236,7 @@ def getPage(sess):
         # colnested1,colnested2=st.columns(2)
         if cpgd is not None: 
             # with colnested1:
-            getCard(cpgd,'High Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw',key="BUFF_1")
+            getCard('High Buffering',cpgd, 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw',key="BUFF_1",height='412',iconLeft=80)
         # if cpgd is not None: 
         #     with colnested2:
         #         getCard(cpgl,'Low Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')    

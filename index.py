@@ -4,7 +4,6 @@ from ui import setUI
 import streamlit.components.v1 as components
 import snowflake.connector as sf
 import streamlit as st
-import hydralit_components as hc
 import gc
 import configparser
 

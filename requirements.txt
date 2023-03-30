@@ -7,7 +7,7 @@ pandas
 Pillow
 streamlit-aggrid==0.3.2
 streamlit-elements
-hydralit_components==1.0.10
+streamlit-kpi==0.0.26
 folium==0.13.0
 leafmap==0.17.1
 pycountry

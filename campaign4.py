@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode
 import pycountry
 import geopandas

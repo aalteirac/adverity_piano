@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
-import string
-import random
-import hydralit_components as hc
 from math import log, floor
 from sklearn.cluster import KMeans
 import plotly.express as px
 import numpy as np
+from streamlit_kpi import streamlit_kpi
+import numbers
 
 session=None
 
@@ -19,18 +18,19 @@ def formatBigNumber(number):
     return '%.3f%s' % (number / k**magnitude, units[magnitude])
 
 
-def getCard(text,val,icon,key, compare=False):
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='250',iconLeft=80,iconTop=40,backgroundColor='#f0f2f6'):
     pgcol='green'
-    if '-' in text:
-        pgcol='red'
+    if isinstance(val, numbers.Number):
+        if val<0:
+            pgcol='red'
     if compare==False:
         pgcol='darkgrey'
     style={'icon': icon,'icon_color':'#535353','progress_color':pgcol}
-    icoSize="10vw"
+    icoSize="20vw"
     if compare==False:
-        return hc.info_card(key=key,title=val, title_text_size="7vw",content=str(text),content_text_size="4vw",icon_size=icoSize,theme_override=style)
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,unit=unit,iconLeft=iconLeft,showProgress=False,iconTop=iconTop,backgroundColor=backgroundColor)
     else:
-        return hc.info_card(key=key,title=val, title_text_size="7vw",content=str(text),content_text_size="4vw",icon_size=icoSize,theme_override=style,bar_value=100)    
+        streamlit_kpi(key=key+"_n",height=height,title=text,value=val,icon=icon,progressValue=100,unit=unit,iconLeft=iconLeft,showProgress=True,progressColor=pgcol,iconTop=iconTop,backgroundColor=backgroundColor)  
 
 @st.cache_data(show_spinner=False,ttl=5000)
 def getRawCampaign():
