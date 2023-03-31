@@ -236,7 +236,7 @@ def getPage(sess):
         # colnested1,colnested2=st.columns(2)
         if cpgd is not None: 
             # with colnested1:
-            getCard('High Buffering',cpgd, 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw',key="BUFF_1",height='412',iconLeft=80)
+            getCard('High Buffering',cpgd, 'fa fa-bolt',titleTextSize='11vw',content_text_size='8.8vw',key="BUFF_1",height='409',iconLeft=80)
         # if cpgd is not None: 
         #     with colnested2:
         #         getCard(cpgl,'Low Buffering', 'fa fa-bolt',titleTextSize='11vw',content_text_size='11vw')    
