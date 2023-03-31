@@ -34,7 +34,7 @@ metricsIcons=['fa fa-mobile',
         'fa fa-wifi'
         ]   
 
-def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=90,backgroundColor='#f0f2f6',iconTop=45):
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='150',iconLeft=90,backgroundColor='#f0f2f6',iconTop=60):
     pgcol='green'
     if isinstance(val, numbers.Number):
         if val<0:
