@@ -23,7 +23,7 @@ def formatBigNumber(number):
     magnitude = int(floor(log(number, k)))
     return '%.2f%s' % (number / k**magnitude, units[magnitude])
 
-def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='100',iconLeft=80,iconTop=90,backgroundColor='#f0f2f6'):
+def getCard(text,val,icon, key,compare=False,titleTextSize="16vw",content_text_size="10vw",unit="%",height='100',iconLeft=90,iconTop=90,backgroundColor='#f0f2f6'):
     pgcol='green'
     if isinstance(val, numbers.Number):
         if val<0:
